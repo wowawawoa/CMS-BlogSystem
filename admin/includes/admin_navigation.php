@@ -20,7 +20,7 @@
     <li class="dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <i class="fa fa-user"></i>
-        John Smith
+        Tong
         <b class="caret"></b>
       </a>
       <ul class="dropdown-menu">
@@ -62,7 +62,7 @@
         <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Categories</a>
       </li>
 
-      <li class="active">
+      <li>
         <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Comments</a>
       </li>
 
