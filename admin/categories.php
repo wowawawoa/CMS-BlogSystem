@@ -1,5 +1,13 @@
 <?php include "includes/admin_header.php"; ?>
 
+<?php
+
+if (isset($_SESSION['username'])) {
+  $username = $_SESSION['username'];
+}
+
+?>
+
 <div id="wrapper">
 
   <!-- Navigation -->
@@ -15,7 +23,7 @@
 
           <h1 class="page-header">
             Welcome to admin
-            <small>Author</small>
+            <small><?php echo $username; ?></small>
           </h1>
 
           <div class="col-xs-6">
