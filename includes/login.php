@@ -26,7 +26,9 @@ if (isset($_POST['login'])) {
     $db_user_role = $row['user_role'];
   }
 
-  if ($username === $db_username && $password === $db_user_password) {
+  $check_password = password_verify($password, $db_user_password);
+
+  if ($username === $db_username && $check_password) {
     $_SESSION['username'] = $db_username;
     $_SESSION['firstname'] = $db_user_firstname;
     $_SESSION['lastname'] = $db_user_lastname;
