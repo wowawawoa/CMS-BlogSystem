@@ -1,13 +1,5 @@
 <?php include "includes/admin_header.php"; ?>
 
-<?php
-
-if (isset($_SESSION['username'])) {
-  $username = $_SESSION['username'];
-}
-
-?>
-
 <div id="wrapper">
 
   <!-- Navigation -->
@@ -22,7 +14,7 @@ if (isset($_SESSION['username'])) {
         <div class="col-lg-12">
           <h1 class="page-header">
             Welcome to admin
-            <small><?php echo $username; ?></small>
+            <small><?php echo $_SESSION['username']; ?></small>
           </h1>
 
           <?php
