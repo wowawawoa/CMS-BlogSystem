@@ -16,49 +16,59 @@
 
             if (isset($_GET['p_id'])) {
                 $the_post_id = $_GET['p_id'];
-            }
 
-            $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
-            $select_all_posts_query = mysqli_query($connection, $query);
+                $view_query = "UPDATE posts SET post_views_count = post_views_count + 1 ";
+                $view_query .= "WHERE post_id = $the_post_id ";
+                $update_post_views_count = mysqli_query($connection, $view_query);
 
-            if (!$select_all_posts_query) {
-                die('QUERY FAILED' . mysqli_error($connection));
-            }
-
-            if (mysqli_num_rows($select_all_posts_query) == 0) {
-                header("Location: index.php");
-            } else {
-                while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
-                    $post_title = $row['post_title'];
-                    $post_author = $row['post_author'];
-                    $post_date = $row['post_date'];
-                    $post_image = $row['post_image'];
-                    $post_content = $row['post_content'];
+                if (!$update_post_views_count) {
+                    die('QUERY FAILED' . mysqli_error($connection));
                 }
+
+                $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
+                $select_all_posts_query = mysqli_query($connection, $query);
+
+                if (!$select_all_posts_query) {
+                    die('QUERY FAILED' . mysqli_error($connection));
+                }
+
+                if (mysqli_num_rows($select_all_posts_query) == 0) {
+                    header("Location: index.php");
+                } else {
+                    while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
+                        $post_title = $row['post_title'];
+                        $post_author = $row['post_author'];
+                        $post_date = $row['post_date'];
+                        $post_image = $row['post_image'];
+                        $post_content = $row['post_content'];
+                    }
 
             ?>
 
-                <h1 class="page-header">
-                    Page Heading
-                    <small>Secondary Text</small>
-                </h1>
+                    <h1 class="page-header">
+                        Page Heading
+                        <small>Secondary Text</small>
+                    </h1>
 
-                <!-- First Blog Post -->
-                <h2>
-                    <a href="#"><?php echo $post_title; ?></a>
-                </h2>
-                <p class="lead">
-                    by <a href="author_posts.php?author=<?php echo $post_author; ?>&p_id=<?php echo $the_post_id; ?>"><?php echo $post_author; ?></a>
-                </p>
-                <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
-                <hr>
-                <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="post image">
-                <hr>
-                <p><?php echo $post_content; ?></p>
+                    <!-- First Blog Post -->
+                    <h2>
+                        <a href="#"><?php echo $post_title; ?></a>
+                    </h2>
+                    <p class="lead">
+                        by <a href="author_posts.php?author=<?php echo $post_author; ?>&p_id=<?php echo $the_post_id; ?>"><?php echo $post_author; ?></a>
+                    </p>
+                    <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
+                    <hr>
+                    <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="post image">
+                    <hr>
+                    <p><?php echo $post_content; ?></p>
 
-                <hr>
+                    <hr>
 
             <?php
+                }
+            } else {
+                header("Location: index.php");
             }
 
             ?>
