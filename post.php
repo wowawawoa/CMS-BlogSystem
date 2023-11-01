@@ -21,12 +21,20 @@
             $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
             $select_all_posts_query = mysqli_query($connection, $query);
 
-            while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
-                $post_title = $row['post_title'];
-                $post_author = $row['post_author'];
-                $post_date = $row['post_date'];
-                $post_image = $row['post_image'];
-                $post_content = $row['post_content'];
+            if (!$select_all_posts_query) {
+                die('QUERY FAILED' . mysqli_error($connection));
+            }
+
+            if (mysqli_num_rows($select_all_posts_query) == 0) {
+                header("Location: index.php");
+            } else {
+                while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
+                    $post_title = $row['post_title'];
+                    $post_author = $row['post_author'];
+                    $post_date = $row['post_date'];
+                    $post_image = $row['post_image'];
+                    $post_content = $row['post_content'];
+                }
 
             ?>
 
