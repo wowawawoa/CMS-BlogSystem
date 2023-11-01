@@ -16,6 +16,7 @@
 
             if (isset($_GET['p_id'])) {
                 $the_post_id = $_GET['p_id'];
+                $message = "";
 
                 $view_query = "UPDATE posts SET post_views_count = post_views_count + 1 ";
                 $view_query .= "WHERE post_id = $the_post_id ";
@@ -96,15 +97,26 @@
                     $query = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
                     $query .= "WHERE post_id = $the_post_id ";
                     $update_comment_count = mysqli_query($connection, $query);
+
+                    if (!$update_comment_count) {
+                        die('QUERY FAILED' . mysqli_error($connection));
+                    }
+
+                    // header("Location: post.php?p_id=$the_post_id");
+                    redirect("post.php?p_id=$the_post_id");
                 } else {
                     echo "<script>alert('Fields cannot be empty')</script>";
+                    // $message = "Fields cannot be empty";
                 }
             }
+
+            
 
             ?>
 
             <div class="well">
                 <h4>Leave a Comment:</h4>
+                <p class="text-danger"><?php echo $message; ?></p>
                 <form role="form" action="#" method="POST">
                     <div class="form-group">
                         <label for="Author">Author</label>

@@ -14,7 +14,30 @@
 
             <?php
 
-            $query = "SELECT * FROM posts WHERE post_status = 'published'";
+            $per_page = 5;
+            $post_query_count = "SELECT * FROM posts";
+            $find_count = mysqli_query($connection, $post_query_count);
+            $count = mysqli_num_rows($find_count);
+
+            $count = ceil($count / $per_page);
+
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+                if ($page > $count || $page < 1) {
+                    header("Location: index.php?page=1");
+                }
+            } else {
+                $page = 1;
+            }
+
+            // post starting id on page
+            if ($page == "" || $page == 1) {
+                $page_1 = 0;
+            } else {
+                $page_1 = ($page * $per_page) - $per_page;
+            }
+
+            $query = "SELECT * FROM posts WHERE post_status = 'published' LIMIT $page_1, $per_page";
             $select_all_posts_query = mysqli_query($connection, $query);
 
             while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
@@ -34,6 +57,8 @@
                 </h1>
 
                 <!-- First Blog Post -->
+                <h1><?php echo $count; ?></h1>
+
                 <h2>
                     <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
                 </h2>
@@ -69,6 +94,22 @@
     <!-- /.row -->
 
     <hr>
+
+    <ul class="pager">
+
+        <?php
+
+        for ($i = 1; $i <= $count; $i++) {
+            if ($i == $page) {
+                echo "<li><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
+            } else {
+                echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";
+            }
+        }
+
+        ?>
+
+    </ul>
 
     <!-- Footer -->
     <?php include "includes/footer.php"; ?>

@@ -62,3 +62,8 @@ function deleteCategories()
     header("Location: categories.php");
   }
 }
+
+function redirect($location)
+{
+  return header("Location: " . $location);
+}
