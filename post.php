@@ -15,7 +15,7 @@
             <?php
 
             if (isset($_GET['p_id'])) {
-                $the_post_id = $_GET['p_id'];
+                $the_post_id = escape($_GET['p_id']);
                 $message = "";
 
                 $view_query = "UPDATE posts SET post_views_count = post_views_count + 1 ";
@@ -26,7 +26,7 @@
                     die('QUERY FAILED' . mysqli_error($connection));
                 }
 
-                $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
+                $query = "SELECT * FROM posts WHERE post_id = $the_post_id AND post_status = 'published'";
                 $select_all_posts_query = mysqli_query($connection, $query);
 
                 if (!$select_all_posts_query) {
@@ -81,9 +81,9 @@
 
             if (isset($_POST['create_comment'])) {
                 $the_post_id = $_GET['p_id'];
-                $comment_author = $_POST['comment_author'];
-                $comment_email = $_POST['comment_email'];
-                $comment_content = $_POST['comment_content'];
+                $comment_author = escape($_POST['comment_author']);
+                $comment_email = escape($_POST['comment_email']);
+                $comment_content = escape($_POST['comment_content']);
 
                 if (!empty($comment_author) && !empty($comment_email) && !empty($comment_content)) {
                     $query = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) ";

@@ -25,15 +25,15 @@ if (isset($_SESSION['user_id'])) {
 
 if (isset($_POST['edit_user'])) {
   $user_id = $_SESSION['user_id'];
-  $user_firstname = $_POST['user_firstname'];
-  $user_lastname = $_POST['user_lastname'];
+  $user_firstname = escape($_POST['user_firstname']);
+  $user_lastname = escape($_POST['user_lastname']);
 
   // $user_image = $_FILES['image']['name'];
   // $user_image_temp = $_FILES['image']['tmp_name'];
 
-  $username = $_POST['username'];
-  $user_email = $_POST['user_email'];
-  $user_password = $_POST['user_password'];
+  $username = escape($_POST['username']);
+  $user_email = escape($_POST['user_email']);
+  $user_password = escape($_POST['user_password']);
 
   // move_uploaded_file($user_image_temp, "../images/$user_image");
 
