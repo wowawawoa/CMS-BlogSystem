@@ -78,7 +78,7 @@ if (isset($_POST['checkBoxArray'])) {
       <tr>
         <th><input type="checkbox" id="selectAllBoxes"></th>
         <th>Id</th>
-        <th>Author</th>
+        <th>User</th>
         <th>Title</th>
         <th>Category</th>
         <th>Status</th>
@@ -101,6 +101,7 @@ if (isset($_POST['checkBoxArray'])) {
       while ($row = mysqli_fetch_assoc($select_posts)) {
         $post_id = $row['post_id'];
         $post_author = $row['post_author'];
+        $post_user = $row['post_user'];
         $post_title = $row['post_title'];
         $post_category_id = $row['post_category_id'];
         $post_status = $row['post_status'];
@@ -118,7 +119,15 @@ if (isset($_POST['checkBoxArray'])) {
       <?php
 
         echo "<td>{$post_id}</td>";
-        echo "<td>{$post_author}</td>";
+
+        if (isset($post_user) && !empty($post_user)) {
+          echo "<td>{$post_user}</td>";
+        } else if (isset($post_author) && !empty($post_author)) {
+          echo "<td>{$post_author}</td>";
+        } else {
+          echo "<td>Unknown</td>";
+        }
+
         echo "<td>{$post_title}</td>";
 
         $query = "SELECT * FROM categories WHERE cat_id = $post_category_id ";
@@ -137,15 +146,7 @@ if (isset($_POST['checkBoxArray'])) {
 
         $comment_query = "SELECT * FROM comments WHERE comment_post_id = $post_id";
         $send_comment_query = mysqli_query($connection, $comment_query);
-        $row = mysqli_fetch_array($send_comment_query);
         $count_comments = mysqli_num_rows($send_comment_query);
-
-        // if ($count_comments > 0) {
-        //   $comment_post_id = $row['comment_post_id'];
-        //   echo "<td><a href='comment.php?id={$comment_post_id}'>$count_comments</a></td>";
-        // } else {
-        //   echo "<td>$count_comments</td>";
-        // }
 
         echo "<td><a href='post_comments.php?id=$post_id'>$count_comments</a></td>";
 
