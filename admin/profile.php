@@ -16,7 +16,6 @@ if (isset($_SESSION['user_id'])) {
     $user_lastname = $row['user_lastname'];
     $user_email = $row['user_email'];
     $user_image = $row['user_image'];
-    $user_role = $row['user_role'];
   }
 }
 
@@ -28,7 +27,6 @@ if (isset($_POST['edit_user'])) {
   $user_id = $_SESSION['user_id'];
   $user_firstname = $_POST['user_firstname'];
   $user_lastname = $_POST['user_lastname'];
-  $user_role = $_POST['user_role'];
 
   // $user_image = $_FILES['image']['name'];
   // $user_image_temp = $_FILES['image']['tmp_name'];
@@ -42,7 +40,6 @@ if (isset($_POST['edit_user'])) {
   $query = "UPDATE users SET ";
   $query .= "user_firstname = '{$user_firstname}', ";
   $query .= "user_lastname = '{$user_lastname}', ";
-  $query .= "user_role = '{$user_role}', ";
   $query .= "username = '{$username}', ";
   $query .= "user_email = '{$user_email}', ";
   $query .= "user_password = '{$user_password}' ";
@@ -83,23 +80,6 @@ if (isset($_POST['edit_user'])) {
               <input type="text" value="<?php echo $user_lastname ?>" class="form-control" name="user_lastname">
             </div>
 
-            <div class="form-group">
-              <select name="user_role" id="">
-                <option value="<?php echo $user_role; ?>"><?php echo $user_role; ?></option>
-
-                <?php
-
-                if ($user_role == 'admin') {
-                  echo "<option value='subscriber'>subscriber</option>";
-                } else {
-                  echo "<option value='admin'>admin</option>";
-                }
-
-                ?>
-
-              </select>
-            </div>
-
             <!-- <div class="form-group">
               <label for="user_image">User Image</label>
               <input type="file" name="image">
@@ -117,7 +97,7 @@ if (isset($_POST['edit_user'])) {
 
             <div class="form-group">
               <label for="user_password">Password</label>
-              <input type="password" value="<?php echo $user_password ?>" class="form-control" name="user_password">
+              <input type="password" autocomplete="off" class="form-control" name="user_password">
             </div>
 
             <div class="form-group">

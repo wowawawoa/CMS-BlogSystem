@@ -3,8 +3,14 @@
 if (isset($_GET['edit_user'])) {
   $the_user_id = $_GET['edit_user'];
 
+  if (!$the_user_id) {
+    header("Location: users.php");
+  }
+
   $query = "SELECT * FROM users WHERE user_id = $the_user_id ";
   $select_users_query = mysqli_query($connection, $query);
+
+  confirmQuery($select_users_query);
 
   while ($row = mysqli_fetch_assoc($select_users_query)) {
     $user_id = $row['user_id'];
@@ -15,6 +21,10 @@ if (isset($_GET['edit_user'])) {
     $user_email = $row['user_email'];
     $user_image = $row['user_image'];
     $user_role = $row['user_role'];
+  }
+
+  if (mysqli_num_rows($select_users_query) == 0) {
+    header("Location: users.php");
   }
 }
 
@@ -97,7 +107,7 @@ if (isset($_POST['edit_user'])) {
 
   <div class="form-group">
     <label for="user_password">Password</label>
-    <input type="password" value="<?php echo $user_password ?>" class="form-control" name="user_password">
+    <input type="password" autocomplete="off" required class="form-control" name="user_password">
   </div>
 
   <div class="form-group">

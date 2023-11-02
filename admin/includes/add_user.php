@@ -12,19 +12,33 @@ if (isset($_POST['create_user'])) {
   $user_email = $_POST['user_email'];
   $user_password = $_POST['user_password'];
 
-  $hashed_password = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 10));
+  if (!empty($user_firstname) && !empty($user_lastname) && !empty($user_role) && !empty($username) && !empty($user_email) && !empty($user_password)) {
 
-  // move_uploaded_file($user_image_temp, "../images/$user_image");
+    $user_firstname = mysqli_real_escape_string($connection, $user_firstname);
+    $user_lastname = mysqli_real_escape_string($connection, $user_lastname);
+    $user_role = mysqli_real_escape_string($connection, $user_role);
 
-  $query = "INSERT INTO users(user_firstname, user_lastname, user_role, username, user_email, user_password) ";
+    // $post_image = $_FILES['image']['name'];
+    // $post_image_temp = $_FILES['image']['tmp_name'];
+    // move_uploaded_file($user_image_temp, "../images/$user_image");
 
-  $query .= "VALUES('{$user_firstname}', '{$user_lastname}', '{$user_role}', '{$username}', '{$user_email}', '{$hashed_password}') ";
+    $username = mysqli_real_escape_string($connection, $username);
+    $user_email = mysqli_real_escape_string($connection, $user_email);
+    $user_password = mysqli_real_escape_string($connection, $user_password);
 
-  $create_user_query = mysqli_query($connection, $query);
+    $hashed_password = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 10));
 
-  confirmQuery($create_user_query);
+    $query = "INSERT INTO users(user_firstname, user_lastname, user_role, username, user_email, user_password) ";
 
-  echo "User Created: " . " " . "<a href='users.php'>View Users</a>";
+    $query .= "VALUES('{$user_firstname}', '{$user_lastname}', '{$user_role}', '{$username}', '{$user_email}', '{$hashed_password}') ";
+
+    $create_user_query = mysqli_query($connection, $query);
+
+    confirmQuery($create_user_query);
+
+    redirect("users.php");
+    // echo "User Created: " . " " . "<a href='users.php'>View Users</a>";
+  }
 }
 
 ?>
@@ -32,17 +46,17 @@ if (isset($_POST['create_user'])) {
 <form action="" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="user_firstname">FirstName</label>
-    <input type="text" class="form-control" name="user_firstname">
+    <input type="text" required class="form-control" name="user_firstname">
   </div>
 
   <div class="form-group">
     <label for="user_lastname">LastName</label>
-    <input type="text" class="form-control" name="user_lastname">
+    <input type="text" required class="form-control" name="user_lastname">
   </div>
 
   <div class="form-group">
-    <select name="user_role" id="">
-      <option value="subscriber">Select Options</option>
+    <select name="user_role" required id="">
+      <option value="">Select Options</option>
       <option value="subscriber">Subscriber</option>
       <option value="admin">Admin</option>
     </select>
@@ -55,17 +69,17 @@ if (isset($_POST['create_user'])) {
 
   <div class="form-group">
     <label for="username">Username</label>
-    <input type="text" class="form-control" name="username">
+    <input type="text" required class="form-control" name="username">
   </div>
 
   <div class="form-group">
     <label for="user_email">Email</label>
-    <input type="email" class="form-control" name="user_email">
+    <input type="email" required class="form-control" name="user_email">
   </div>
 
   <div class="form-group">
     <label for="user_password">Password</label>
-    <input type="password" class="form-control" name="user_password">
+    <input type="password" required class="form-control" name="user_password">
   </div>
 
   <div class="form-group">
