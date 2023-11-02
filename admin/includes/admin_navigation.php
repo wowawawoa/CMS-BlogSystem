@@ -14,6 +14,12 @@
   <!-- Top Menu Items -->
   <ul class="nav navbar-right top-nav">
     <li>
+      <!-- <a href="" style="pointer-events: none;">Users Online: <?php echo users_online(); ?></a> -->
+      <!-- Ajax instant users online count without refreshing -->
+      <a href="" style="pointer-events: none;">Users Online: <span class="usersonline"></span></a>
+    </li>
+
+    <li>
       <a href="../index.php">Home Site</a>
     </li>
 
