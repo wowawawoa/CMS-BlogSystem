@@ -65,7 +65,7 @@ if (isset($_POST['edit_user'])) {
       <div class="row">
         <div class="col-lg-12">
           <h1 class="page-header">
-            Welcome to admin
+            Welcome to Profile
             <small><?php echo $username; ?></small>
           </h1>
 

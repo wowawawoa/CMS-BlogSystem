@@ -15,7 +15,6 @@ while ($row = mysqli_fetch_assoc($select_posts_by_id)) {
   $post_status = $row['post_status'];
   $post_image = $row['post_image'];
   $post_tags = $row['post_tags'];
-  $post_comment_count = $row['post_comment_count'];
   $post_date = $row['post_date'];
   $post_content = $row['post_content'];
 }
