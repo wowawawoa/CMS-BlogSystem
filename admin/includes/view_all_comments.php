@@ -38,11 +38,19 @@
       $query = "SELECT * FROM posts WHERE post_id = $comment_post_id ";
       $select_post_id_query = mysqli_query($connection, $query);
 
-      while ($row = mysqli_fetch_assoc($select_post_id_query)) {
-        $post_id = $row['post_id'];
-        $post_title = $row['post_title'];
+      if (!$select_post_id_query) {
+        die("QUERY FAILED" . mysqli_error($connection));
+      }
 
-        echo "<td><a href='../post.php?p_id=$post_id'>{$post_title}</a></td>";
+      if (mysqli_num_rows($select_post_id_query) == 0) {
+        echo "<td>Post Deleted</td>";
+      } else {
+        while ($row = mysqli_fetch_assoc($select_post_id_query)) {
+          $post_id = $row['post_id'];
+          $post_title = $row['post_title'];
+
+          echo "<td><a href='../post.php?p_id=$post_id'>{$post_title}</a></td>";
+        }
       }
 
       echo "<td>{$comment_date}</td>";

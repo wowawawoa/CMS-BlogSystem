@@ -20,8 +20,13 @@
 
             $per_page = 5;
 
-            $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
-            $find_category_posts = mysqli_query($connection, $query);
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
+            } else {
+                $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published'";
+            }
+
+            $find_category_posts = mysqli_query($connection, $post_query_count);
             $count = mysqli_num_rows($find_category_posts);
             $count = ceil($count / $per_page);
 
@@ -30,7 +35,7 @@
             }
 
             if ($count == 0 || $count == null) {
-                echo "<h2 class='text-center'>No posts available</h2>";
+                echo "<h1 class='text-center'>No posts available</h1>";
             } else {
                 if (isset($_GET['page'])) {
                     $page = escape($_GET['page']);
@@ -48,12 +53,14 @@
                     $page_1 = ($page * $per_page) - $per_page;
                 }
 
-                $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id LIMIT $page_1, $per_page";
+                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                    $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id LIMIT $page_1, $per_page";
+                } else {
+                    $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published' LIMIT $page_1, $per_page";
+                }
+
                 $select_all_posts_query = mysqli_query($connection, $query);
 
-                // if ($count == 0 || $count == null) {
-                //     echo "<h2 class='text-center'>No posts available</h2>";
-                // } else {
                 while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];

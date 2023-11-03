@@ -14,7 +14,7 @@
 
             <?php
 
-            if (isset($_GET['p_id'])) {
+            if (isset($_GET['p_id']) && $_GET['p_id']) {
                 $the_post_id = escape($_GET['p_id']);
                 $message = "";
 
@@ -26,7 +26,12 @@
                     die('QUERY FAILED' . mysqli_error($connection));
                 }
 
-                $query = "SELECT * FROM posts WHERE post_id = $the_post_id AND post_status = 'published'";
+                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                    $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
+                } else {
+                    $query = "SELECT * FROM posts WHERE post_id = $the_post_id AND post_status = 'published'";
+                }
+
                 $select_all_posts_query = mysqli_query($connection, $query);
 
                 if (!$select_all_posts_query) {
@@ -48,8 +53,7 @@
             ?>
 
                     <h1 class="page-header">
-                        Page Heading
-                        <small>Secondary Text</small>
+                        Posts
                     </h1>
 
                     <!-- First Blog Post -->
@@ -67,105 +71,103 @@
 
                     <hr>
 
-            <?php
+                <?php
                 }
+
+                ?>
+
+                <!-- Blog Comments -->
+
+                <!-- Comments Form -->
+                <?php
+
+                if (isset($_POST['create_comment'])) {
+                    $the_post_id = $_GET['p_id'];
+                    $comment_author = escape($_POST['comment_author']);
+                    $comment_email = escape($_POST['comment_email']);
+                    $comment_content = escape($_POST['comment_content']);
+
+                    if (!empty($comment_author) && !empty($comment_email) && !empty($comment_content)) {
+                        $query = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) ";
+                        $query .= "VALUES ($the_post_id, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved', now()) ";
+                        $create_comment_query = mysqli_query($connection, $query);
+
+                        if (!$create_comment_query) {
+                            die('QUERY FAILED' . mysqli_error($connection));
+                        }
+
+                        redirect("post.php?p_id=$the_post_id");
+                    } else {
+                        // echo "<script>alert('Fields cannot be empty')</script>";
+                        $message = "Fields cannot be empty";
+                        echo "<script>if ( window.history.replaceState ) { window.history.replaceState( null, null, window.location.href );}</script>";
+                    }
+                }
+
+                ?>
+
+                <div class="well">
+                    <h4>Leave a Comment:</h4>
+                    <p class="text-danger"><?php echo $message; ?></p>
+                    <form role="form" action="#" method="POST">
+                        <div class="form-group">
+                            <label for="Author">Author</label>
+                            <input type="text" required class="form-control" name="comment_author">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Email">Email</label>
+                            <input type="email" required class="form-control" name="comment_email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment">Your Comment</label>
+                            <textarea class="form-control" required name="comment_content" rows="3"></textarea>
+                        </div>
+
+                        <button type="submit" name="create_comment" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+                <hr>
+
+                <!-- Posted Comments -->
+
+                <!-- Comment -->
+                <?php
+
+                $query = "SELECT * FROM comments WHERE comment_post_id = {$the_post_id} ";
+                $query .= "AND comment_status = 'approved' ";
+                $query .= "ORDER BY comment_id DESC ";
+                $select_comment_query = mysqli_query($connection, $query);
+
+                if (!$select_comment_query) {
+                    die('QUERY FAILED' . mysqli_error($connection));
+                }
+
+                while ($row = mysqli_fetch_array($select_comment_query)) {
+                    $comment_date = $row['comment_date'];
+                    $comment_content = $row['comment_content'];
+                    $comment_author = $row['comment_author'];
+
+                ?>
+
+                    <div class="media">
+                        <a class="pull-left" href="#">
+                            <img class="media-object" src="http://placehold.it/64x64" alt="">
+                        </a>
+                        <div class="media-body">
+                            <h4 class="media-heading"><?php echo $comment_author; ?>
+                                <small><?php $comment_date; ?></small>
+                            </h4>
+                            <?php echo $comment_content; ?>
+                        </div>
+                    </div>
+
+            <?php }
             } else {
                 header("Location: index.php");
             }
-
-            ?>
-
-            <!-- Blog Comments -->
-
-            <!-- Comments Form -->
-            <?php
-
-            if (isset($_POST['create_comment'])) {
-                $the_post_id = $_GET['p_id'];
-                $comment_author = escape($_POST['comment_author']);
-                $comment_email = escape($_POST['comment_email']);
-                $comment_content = escape($_POST['comment_content']);
-
-                if (!empty($comment_author) && !empty($comment_email) && !empty($comment_content)) {
-                    $query = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) ";
-                    $query .= "VALUES ($the_post_id, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved', now()) ";
-                    $create_comment_query = mysqli_query($connection, $query);
-
-                    if (!$create_comment_query) {
-                        die('QUERY FAILED' . mysqli_error($connection));
-                    }
-
-                    // header("Location: post.php?p_id=$the_post_id");
-                    redirect("post.php?p_id=$the_post_id");
-                } else {
-                    echo "<script>alert('Fields cannot be empty')</script>";
-                    // $message = "Fields cannot be empty";
-                }
-            }
-
-            
-
-            ?>
-
-            <div class="well">
-                <h4>Leave a Comment:</h4>
-                <p class="text-danger"><?php echo $message; ?></p>
-                <form role="form" action="#" method="POST">
-                    <div class="form-group">
-                        <label for="Author">Author</label>
-                        <input type="text" class="form-control" name="comment_author">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Email">Email</label>
-                        <input type="email" class="form-control" name="comment_email">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="comment">Your Comment</label>
-                        <textarea class="form-control" name="comment_content" rows="3"></textarea>
-                    </div>
-
-                    <button type="submit" name="create_comment" class="btn btn-primary">Submit</button>
-                </form>
-            </div>
-
-            <hr>
-
-            <!-- Posted Comments -->
-
-            <!-- Comment -->
-            <?php
-
-            $query = "SELECT * FROM comments WHERE comment_post_id = {$the_post_id} ";
-            $query .= "AND comment_status = 'approved' ";
-            $query .= "ORDER BY comment_id DESC ";
-            $select_comment_query = mysqli_query($connection, $query);
-
-            if (!$select_comment_query) {
-                die('QUERY FAILED' . mysqli_error($connection));
-            }
-
-            while ($row = mysqli_fetch_array($select_comment_query)) {
-                $comment_date = $row['comment_date'];
-                $comment_content = $row['comment_content'];
-                $comment_author = $row['comment_author'];
-
-            ?>
-
-                <div class="media">
-                    <a class="pull-left" href="#">
-                        <img class="media-object" src="http://placehold.it/64x64" alt="">
-                    </a>
-                    <div class="media-body">
-                        <h4 class="media-heading"><?php echo $comment_author; ?>
-                            <small><?php $comment_date; ?></small>
-                        </h4>
-                        <?php echo $comment_content; ?>
-                    </div>
-                </div>
-
-            <?php }
 
             ?>
 
