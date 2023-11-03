@@ -18,18 +18,43 @@
                 $post_category_id = escape($_GET['category']);
             }
 
-            $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
-            $select_all_categories_query = mysqli_query($connection, $query);
+            $per_page = 5;
 
-            if (!$select_all_categories_query) {
+            $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
+            $find_category_posts = mysqli_query($connection, $query);
+            $count = mysqli_num_rows($find_category_posts);
+            $count = ceil($count / $per_page);
+
+            if (!$find_category_posts) {
                 die('QUERY FAILED' . mysqli_error($connection));
             }
 
-            if (mysqli_num_rows($select_all_categories_query) == 0) {
+            if ($count == 0 || $count == null) {
                 echo "<h2 class='text-center'>No posts available</h2>";
             } else {
+                if (isset($_GET['page'])) {
+                    $page = escape($_GET['page']);
+                    if ($page > $count || $page < 1) {
+                        header("Location: index.php?page=1");
+                    }
+                } else {
+                    $page = 1;
+                }
 
-                while ($row = mysqli_fetch_assoc($select_all_categories_query)) {
+                // post starting id on page
+                if ($page == "" || $page == 1) {
+                    $page_1 = 0;
+                } else {
+                    $page_1 = ($page * $per_page) - $per_page;
+                }
+
+                $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id LIMIT $page_1, $per_page";
+                $select_all_posts_query = mysqli_query($connection, $query);
+
+                // if ($count == 0 || $count == null) {
+                //     echo "<h2 class='text-center'>No posts available</h2>";
+                // } else {
+                while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
                     $post_id = $row['post_id'];
                     $post_title = $row['post_title'];
                     $post_author = $row['post_author'];
@@ -75,6 +100,22 @@
     <!-- /.row -->
 
     <hr>
+
+    <ul class="pager">
+
+        <?php
+
+        for ($i = 1; $i <= $count; $i++) {
+            if ($i == $page) {
+                echo "<li><a class='active_link' href='category.php?category={$post_category_id}&page={$i}'>{$i}</a></li>";
+            } else {
+                echo "<li><a href='category.php?category={$post_category_id}&page={$i}'>{$i}</a></li>";
+            }
+        }
+
+        ?>
+
+    </ul>
 
     <!-- Footer -->
     <?php include "includes/footer.php"; ?>
