@@ -39,6 +39,10 @@ if (isset($_POST['checkBoxArray'])) {
           $post_image = $row['post_image'];
           $post_tags = $row['post_tags'];
           $post_content = $row['post_content'];
+
+          if (empty($post_tags)) {
+            $post_tags = "No tags";
+          }
         }
 
         $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status) ";
@@ -112,6 +116,10 @@ if (isset($_POST['checkBoxArray'])) {
         $post_tags = $row['post_tags'];
         $post_date = $row['post_date'];
         $post_views_count = $row['post_views_count'];
+
+        if (empty($post_tags)) {
+          $post_tags = "No tags";
+        }
 
         echo "<tr>";
 

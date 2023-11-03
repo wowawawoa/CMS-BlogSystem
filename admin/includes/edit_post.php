@@ -144,8 +144,9 @@ if (isset($_POST['update_post'])) {
   </div>
 
   <div class="form-group">
-    <img width="100" src="../images/<?php echo $post_image; ?>" alt="post image">
-    <input type="file" name="image">
+    <!-- <img width="100" src="../images/<?php echo $post_image; ?>" alt="post image"> -->
+    <img width="100" id="edit_post_image" src="../images/<?php echo $post_image; ?>" alt="post image">
+    <input type="file" name="image" onchange="editPostImage(this);">
   </div>
 
   <div class="form-group">

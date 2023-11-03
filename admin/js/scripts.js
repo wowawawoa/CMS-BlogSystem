@@ -35,3 +35,34 @@ function loadUsersOnline() {
 setInterval(function () {
   loadUsersOnline();
 }, 500);
+
+function addPostImage(input) {
+  var imgElement = $("#add_post_image");
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      imgElement.attr("src", e.target.result);
+      imgElement.show();
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    imgElement.hide();
+  }
+}
+
+function editPostImage(input) {
+  var imgElement = $("#edit_post_image");
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      imgElement.attr("src", e.target.result);
+    };
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}

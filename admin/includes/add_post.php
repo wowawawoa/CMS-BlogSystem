@@ -89,8 +89,9 @@ if (isset($_POST['create_post'])) {
   </div>
 
   <div class="form-group">
-    <label for="image">Post Image</label>
-    <input type="file" name="image">
+    <label for="image" style="display: block;">Post Image</label>
+    <img width="100" id="add_post_image" src="" alt="post image" style="display: none;" >
+    <input type="file" name="image" onchange="addPostImage(this);">
   </div>
 
   <div class="form-group">
