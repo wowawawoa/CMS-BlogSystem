@@ -7,7 +7,8 @@ if (isset($_POST['submit'])) {
   $to = "tonglin0608@gmail.com";
   $subject = escape(wordwrap($_POST['subject']), 70);
   $body = escape(wordwrap($_POST['body']), 70);
-  $header = "From:" .escape($_POST['email']);
+  // $header = "From:" .escape($_POST['email']);
+  $header = escape($_POST['email']);
 
   if (!empty($subject) && !empty($body) && !empty($header)) {
     mail("tonglin0608@gmail.com", $subject, $body, $header);
