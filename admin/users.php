@@ -1,5 +1,13 @@
 <?php include "includes/admin_header.php"; ?>
 
+<?php
+
+if (!is_admin($_SESSION['username'])) {
+  redirect("index.php");
+}
+
+?>
+
 <div id="wrapper">
 
   <!-- Navigation -->

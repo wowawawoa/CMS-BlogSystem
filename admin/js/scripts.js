@@ -1,3 +1,8 @@
+// avoid form resubmission on page refresh
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
+
 $(document).ready(function () {
   $("#summernote").summernote({
     height: 200,
@@ -24,6 +29,8 @@ $(document).ready(function () {
   //   .fadeOut(300, function () {
   //     $(this).remove();
   //   });
+
+  window.history.replaceState("", "", window.location.href);
 });
 
 function loadUsersOnline() {

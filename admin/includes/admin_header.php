@@ -7,12 +7,16 @@
 
 <?php
 
+// if (!isset($_SESSION['user_role'])) {
+//   header("Location: ../index.php");
+// } else if (isset($_SESSION['user_role'])) {
+//   if ($_SESSION['user_role'] !== 'admin') {
+//     header("Location: ../index.php");
+//   }
+// }
+
 if (!isset($_SESSION['user_role'])) {
-  header("Location: ../index.php");
-} else if (isset($_SESSION['user_role'])) {
-  if ($_SESSION['user_role'] !== 'admin') {
-    header("Location: ../index.php");
-  }
+  redirect("../index.php");
 }
 
 ?>
@@ -28,7 +32,7 @@ if (!isset($_SESSION['user_role'])) {
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin - Bootstrap Admin Template</title>
+  <title>CMS BlogSystem Admin</title>
 
   <!-- Bootstrap Core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">

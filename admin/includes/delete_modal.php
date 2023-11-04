@@ -12,7 +12,10 @@
         <h3 class="text-center">Are you sure you want to delete this post?</h3>
       </div>
       <div class="modal-footer">
-        <a href="" class="btn btn-danger modal_delete_link">Delete</a>
+        <form style="position:absolute; margin-left:425px " action="" method="post">
+          <input type="hidden" class='modal_delete_link' name="delete_item" value=''>
+          <input class="btn btn-danger delete_link" type='submit' name='delete' value='Delete'>
+        </form>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
     </div>
