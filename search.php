@@ -25,7 +25,7 @@
 
                 $count = mysqli_num_rows($search_query);
 
-                if ($count == 0) {
+                if ($count === 0) {
                     echo "<h1>NO RESULT</h1>";
                 } else {
                     while ($row = mysqli_fetch_assoc($search_query)) {

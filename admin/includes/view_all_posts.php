@@ -195,7 +195,7 @@ if (isset($_POST['checkBoxArray'])) {
 
 if (isset($_POST['delete'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_post_id = escape($_POST['post_id']);
       $query = "DELETE FROM posts WHERE post_id = {$the_post_id} ";
       $delete_query = mysqli_query($connection, $query);
@@ -206,7 +206,7 @@ if (isset($_POST['delete'])) {
 
 if (isset($_GET['reset'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_post_id = escape($_GET['reset']);
       $query = "UPDATE posts SET post_views_count = 0 WHERE post_id =" . mysqli_real_escape_string($connection, $_GET['reset']);
       $reset_query = mysqli_query($connection, $query);

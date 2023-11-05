@@ -20,7 +20,7 @@
 
             $per_page = 5;
 
-            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                 $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
             } else {
                 $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published'";
@@ -34,7 +34,7 @@
                 die('QUERY FAILED' . mysqli_error($connection));
             }
 
-            if ($count == 0 || $count == null) {
+            if ($count === 0 || $count === null) {
                 echo "<h1 class='text-center'>No posts available</h1>";
             } else {
                 if (isset($_GET['page'])) {
@@ -47,13 +47,13 @@
                 }
 
                 // post starting id on page
-                if ($page == "" || $page == 1) {
+                if ($page === "" || $page === 1) {
                     $page_1 = 0;
                 } else {
                     $page_1 = ($page * $per_page) - $per_page;
                 }
 
-                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                     $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id LIMIT $page_1, $per_page";
                 } else {
                     $query = "SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published' LIMIT $page_1, $per_page";
@@ -113,7 +113,7 @@
         <?php
 
         for ($i = 1; $i <= $count; $i++) {
-            if ($i == $page) {
+            if ($i === $page) {
                 echo "<li><a class='active_link' href='category.php?category={$post_category_id}&page={$i}'>{$i}</a></li>";
             } else {
                 echo "<li><a href='category.php?category={$post_category_id}&page={$i}'>{$i}</a></li>";

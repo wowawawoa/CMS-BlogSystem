@@ -16,7 +16,7 @@
 
             $per_page = 5;
 
-            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                 $post_query_count = "SELECT * FROM posts";
             } else {
                 $post_query_count = "SELECT * FROM posts WHERE post_status = 'published'";
@@ -37,13 +37,13 @@
             }
 
             // post starting id on page
-            if ($page == "" || $page == 1) {
+            if ($page === "" || $page === 1) {
                 $page_1 = 0;
             } else {
                 $page_1 = ($page * $per_page) - $per_page;
             }
 
-            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                 $query = "SELECT * FROM posts LIMIT $page_1, $per_page";
             } else {
                 $query = "SELECT * FROM posts WHERE post_status = 'published' LIMIT $page_1, $per_page";
@@ -91,7 +91,7 @@
             <?php
             }
 
-            if (mysqli_num_rows($select_all_posts_query) == 0) {
+            if (mysqli_num_rows($select_all_posts_query) === 0) {
                 echo "<h1 class='text-center'>No posts available</h1>";
             }
 
@@ -112,7 +112,7 @@
         <?php
 
         for ($i = 1; $i <= $count; $i++) {
-            if ($i == $page) {
+            if ($i === $page) {
                 echo "<li><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
             } else {
                 echo "<li><a href='index.php?page={$i}'>{$i}</a></li>";

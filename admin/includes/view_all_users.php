@@ -48,7 +48,7 @@
 
 if (isset($_GET['change_to_admin'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_user_id = escape($_GET['change_to_admin']);
       $query = "UPDATE users SET user_role = 'admin' WHERE user_id = {$the_user_id} ";
       $change_to_admin_query = mysqli_query($connection, $query);
@@ -59,7 +59,7 @@ if (isset($_GET['change_to_admin'])) {
 
 if (isset($_GET['change_to_sub'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_user_id = escape($_GET['change_to_sub']);
       $query = "UPDATE users SET user_role = 'subscriber' WHERE user_id = {$the_user_id} ";
       $change_to_sub_query = mysqli_query($connection, $query);
@@ -70,7 +70,7 @@ if (isset($_GET['change_to_sub'])) {
 
 if (isset($_GET['delete'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_user_id = escape($_GET['delete']);
       $query = "DELETE FROM users WHERE user_id = {$the_user_id} ";
       $delete_query = mysqli_query($connection, $query);

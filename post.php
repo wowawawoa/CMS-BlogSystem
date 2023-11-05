@@ -26,7 +26,7 @@
                     die('QUERY FAILED' . mysqli_error($connection));
                 }
 
-                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 'admin') {
+                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                     $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
                 } else {
                     $query = "SELECT * FROM posts WHERE post_id = $the_post_id AND post_status = 'published'";
@@ -38,7 +38,7 @@
                     die('QUERY FAILED' . mysqli_error($connection));
                 }
 
-                if (mysqli_num_rows($select_all_posts_query) == 0) {
+                if (mysqli_num_rows($select_all_posts_query) === 0) {
                     redirect("index.php");
                 } else {
                     while ($row = mysqli_fetch_assoc($select_all_posts_query)) {

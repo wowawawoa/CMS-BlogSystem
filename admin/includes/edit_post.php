@@ -85,7 +85,7 @@ if (isset($_POST['update_post'])) {
         $cat_id = $row['cat_id'];
         $cat_title = $row['cat_title'];
 
-        if ($cat_id == $post_category_id) {
+        if ($cat_id === $post_category_id) {
           echo "<option selected value='{$cat_id}'>{$cat_title}</option>";
         } else {
           echo "<option value='{$cat_id}'>{$cat_title}</option>";
@@ -114,7 +114,7 @@ if (isset($_POST['update_post'])) {
         $user_id = $row['user_id'];
         $username = $row['username'];
 
-        if ($post_user == $username) {
+        if ($post_user === $username) {
           echo "<option selected value='{$username}'>{$username}</option>";
         } else {
           echo "<option value='{$username}'>{$username}</option>";
@@ -132,7 +132,7 @@ if (isset($_POST['update_post'])) {
 
       <?php
 
-      if ($post_status == 'published') {
+      if ($post_status === 'published') {
         echo "<option value='draft'>draft</option>";
       } else {
         echo "<option value='published'>published</option>";

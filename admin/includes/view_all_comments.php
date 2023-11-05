@@ -42,7 +42,7 @@
         die("QUERY FAILED" . mysqli_error($connection));
       }
 
-      if (mysqli_num_rows($select_post_id_query) == 0) {
+      if (mysqli_num_rows($select_post_id_query) === 0) {
         echo "<td>Post Deleted</td>";
       } else {
         while ($row = mysqli_fetch_assoc($select_post_id_query)) {
@@ -69,7 +69,7 @@
 
 if (isset($_GET['approve'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_comment_id = escape($_GET['approve']);
       $query = "UPDATE comments SET comment_status = 'approved' WHERE comment_id = {$the_comment_id} ";
       $approve_comment_query = mysqli_query($connection, $query);
@@ -80,7 +80,7 @@ if (isset($_GET['approve'])) {
 
 if (isset($_GET['unapprove'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_comment_id = escape($_GET['unapprove']);
       $query = "UPDATE comments SET comment_status = 'unapproved' WHERE comment_id = {$the_comment_id} ";
       $unapprove_comment_query = mysqli_query($connection, $query);
@@ -91,7 +91,7 @@ if (isset($_GET['unapprove'])) {
 
 if (isset($_GET['delete'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] == 'admin') {
+    if ($_SESSION['user_role'] === 'admin') {
       $the_comment_id = escape($_GET['delete']);
       $query = "DELETE FROM comments WHERE comment_id = {$the_comment_id} ";
       $delete_query = mysqli_query($connection, $query);

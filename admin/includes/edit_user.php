@@ -23,7 +23,7 @@ if (isset($_GET['edit_user'])) {
     $user_role = $row['user_role'];
   }
 
-  if (mysqli_num_rows($select_users_query) == 0) {
+  if (mysqli_num_rows($select_users_query) === 0) {
     redirect("users.php");
   }
 }
@@ -79,7 +79,7 @@ if (isset($_POST['edit_user'])) {
 
       <?php
 
-      if ($user_role == 'admin') {
+      if ($user_role === 'admin') {
         echo "<option value='subscriber'>subscriber</option>";
       } else {
         echo "<option value='admin'>admin</option>";

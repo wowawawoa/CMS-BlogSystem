@@ -26,7 +26,7 @@
                 die('QUERY FAILED' . mysqli_error($connection));
             }
 
-            if (mysqli_num_rows($select_all_posts_query) == 0) {
+            if (mysqli_num_rows($select_all_posts_query) === 0) {
                 redirect("index.php");
             } else {
                 while ($row = mysqli_fetch_assoc($select_all_posts_query)) {

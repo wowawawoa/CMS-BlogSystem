@@ -32,11 +32,11 @@
 
           $pageName = basename($_SERVER['PHP_SELF']);
 
-          if (isset($_GET['category']) && $_GET['category'] == $cat_id) {
+          if (isset($_GET['category']) && $_GET['category'] === $cat_id) {
             $category_class = 'active';
-          } else if ($pageName == 'registration.php') {
+          } else if ($pageName === 'registration.php') {
             $registration_class = 'active';
-          } else if ($pageName == 'contact.php') {
+          } else if ($pageName === 'contact.php') {
             $contact_class = 'active';
           }
 

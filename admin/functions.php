@@ -11,7 +11,17 @@ function confirmQuery($result)
 
 function redirect($location)
 {
-  return header("Location: " . $location);
+  header("Location: " . $location);
+  exit;
+}
+
+function ifItIsMethod($method = null)
+{
+  if ($_SERVER['REQUEST_METHOD'] === strtoupper($method)) {
+    return true;
+  }
+
+  return false;
 }
 
 function insert_categories()
@@ -21,7 +31,7 @@ function insert_categories()
   if (isset($_POST['submit'])) {
     $cat_title = escape($_POST['cat_title']);
 
-    if ($cat_title == "" || empty($cat_title)) {
+    if ($cat_title === "" || empty($cat_title)) {
       echo "This field should not be empty";
     } else {
       $query = "INSERT INTO categories(cat_title) ";
@@ -87,7 +97,7 @@ function users_online()
       $send_query = mysqli_query($connection, $query);
       $count = mysqli_num_rows($send_query);
 
-      if ($count == NULL) {
+      if ($count === NULL) {
         mysqli_query($connection, "INSERT INTO users_online(session, time) VALUES('$session', '$time')");
       } else {
         mysqli_query($connection, "UPDATE users_online SET time = '$time' WHERE session = '$session'");

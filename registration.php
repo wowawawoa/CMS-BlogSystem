@@ -3,7 +3,7 @@
 
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = escape(trim($_POST['username']));
     $email = escape(trim($_POST['email']));
     $password = escape(trim($_POST['password']));
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error['username'] = 'Username needs to be at least 4 characters';
     }
 
-    if ($username == '') {
+    if ($username === '') {
         $error['username'] = 'Username cannot be empty';
     }
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error['username'] = 'Username already exists, pick another one';
     }
 
-    if ($email == '') {
+    if ($email === '') {
         $error['email'] = 'Email cannot be empty';
     }
 
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $error['email'] = 'Email already exists, <a href="index.php">Please login</a>';
     }
 
-    if ($password == '') {
+    if ($password === '') {
         $error['password'] = 'Password cannot be empty';
     }
 
