@@ -39,9 +39,11 @@ if (ifItIsMethod('post')) {
     <?php else : ?>
       <h4>Login</h4>
       <form action="" method="post">
+
         <div class="form-group">
           <input name="username" type="text" class="form-control" placeholder="Enter Username">
         </div>
+
         <div class="input-group">
           <input name="password" type="password" class="form-control" placeholder="Enter Password">
           <span class="input-group-btn">
@@ -50,6 +52,11 @@ if (ifItIsMethod('post')) {
             </button>
           </span>
         </div>
+
+        <div class="form-group">
+          <a href="forgot_password.php?forgot=<?php echo uniqid(true) ?>">Forgot Password</a>
+        </div>
+
       </form>
     <?php endif; ?>
 
