@@ -28,7 +28,7 @@
             $count = ceil($count / $per_page);
 
             if (isset($_GET['page'])) {
-                $page = escape($_GET['page']);
+                $page = intval(escape($_GET['page']));
                 if ($page > $count || $page < 1) {
                     redirect("index.php?page=1");
                 }

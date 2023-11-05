@@ -38,7 +38,7 @@
                 echo "<h1 class='text-center'>No posts available</h1>";
             } else {
                 if (isset($_GET['page'])) {
-                    $page = escape($_GET['page']);
+                    $page = intval(escape($_GET['page']));
                     if ($page > $count || $page < 1) {
                         redirect("index.php?page=1");
                     }
