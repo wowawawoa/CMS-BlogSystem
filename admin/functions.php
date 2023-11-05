@@ -9,6 +9,11 @@ function confirmQuery($result)
   }
 }
 
+function redirect($location)
+{
+  return header("Location: " . $location);
+}
+
 function insert_categories()
 {
   global $connection;
@@ -59,14 +64,11 @@ function deleteCategories()
     $the_cat_id = escape($_GET['delete']);
     $query = "DELETE FROM categories WHERE cat_id = {$the_cat_id} ";
     $delete_query = mysqli_query($connection, $query);
-    header("Location: categories.php");
+    redirect("categories.php");
   }
 }
 
-function redirect($location)
-{
-  return header("Location: " . $location);
-}
+
 
 function users_online()
 {

@@ -199,7 +199,7 @@ if (isset($_POST['delete'])) {
       $the_post_id = escape($_POST['post_id']);
       $query = "DELETE FROM posts WHERE post_id = {$the_post_id} ";
       $delete_query = mysqli_query($connection, $query);
-      header("Location: posts.php");
+      redirect("posts.php");
     }
   }
 }
@@ -210,7 +210,7 @@ if (isset($_GET['reset'])) {
       $the_post_id = escape($_GET['reset']);
       $query = "UPDATE posts SET post_views_count = 0 WHERE post_id =" . mysqli_real_escape_string($connection, $_GET['reset']);
       $reset_query = mysqli_query($connection, $query);
-      header("Location: posts.php");
+      redirect("posts.php");
     }
   }
 }

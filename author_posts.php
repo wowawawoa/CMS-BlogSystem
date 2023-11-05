@@ -27,7 +27,7 @@
             }
 
             if (mysqli_num_rows($select_all_posts_query) == 0) {
-                header("Location: index.php");
+                redirect("index.php");
             } else {
                 while ($row = mysqli_fetch_assoc($select_all_posts_query)) {
                     $post_title = $row['post_title'];

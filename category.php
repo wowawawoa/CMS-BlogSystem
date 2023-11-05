@@ -40,7 +40,7 @@
                 if (isset($_GET['page'])) {
                     $page = escape($_GET['page']);
                     if ($page > $count || $page < 1) {
-                        header("Location: index.php?page=1");
+                        redirect("index.php?page=1");
                     }
                 } else {
                     $page = 1;
