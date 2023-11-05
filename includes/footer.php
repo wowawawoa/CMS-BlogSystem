@@ -1,7 +1,7 @@
 <footer>
   <div class="row">
     <div class="col-lg-12 text-center">
-      <p>Copyright &copy; Tong's Website 2023</p>
+      <p>Copyright &copy; CMS_BLOG By Tong Lin 2023</p>
     </div>
     <!-- /.col-lg-12 -->
   </div>

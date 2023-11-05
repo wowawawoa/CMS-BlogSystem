@@ -24,6 +24,22 @@ function ifItIsMethod($method = null)
   return false;
 }
 
+function isLoggedIn()
+{
+  if (isset($_SESSION['user_role'])) {
+    return true;
+  }
+
+  return false;
+}
+
+function checkIfUserIsLoggedInAndRedirect($redirectLocation = null)
+{
+  if (isLoggedIn()) {
+    redirect($redirectLocation);
+  }
+}
+
 function insert_categories()
 {
   global $connection;

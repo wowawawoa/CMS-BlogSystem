@@ -26,6 +26,7 @@
           $category_class = '';
           $registration_class = '';
           $contact_class = '';
+          $login_class = '';
 
           $registration = 'registration.php';
           $contact = 'contact.php';
@@ -38,6 +39,8 @@
             $registration_class = 'active';
           } else if ($pageName === 'contact.php') {
             $contact_class = 'active';
+          } else if ($pageName === 'login.php') {
+            $login_class = 'active';
           }
 
           echo "<li class='$category_class'><a href='category.php?category={$cat_id}&page=1'>{$cat_title}</a></li>";
@@ -45,9 +48,21 @@
 
         ?>
 
-        <li>
-          <a href='admin'>Admin</a>
-        </li>
+        <?php if (isLoggedIn()) : ?>
+
+          <li>
+            <a href='admin'>Admin</a>
+          </li>
+
+        <?php else : ?>
+
+          <li class="<?php echo $login_class; ?>">
+            <a href='login.php'>Login</a>
+          </li>
+
+        <?php endif; ?>
+
+
 
         <li class="<?php echo $registration_class; ?>">
           <a href='registration.php'>Registration</a>
