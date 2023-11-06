@@ -115,7 +115,7 @@ if (isset($_POST['checkBoxArray'])) {
         $post_title = $row['post_title'];
         $post_category_id = $row['post_category_id'];
         $post_status = $row['post_status'];
-        $post_image = $row['post_image'];
+        $post_image = $row['post_image'];        
         $post_tags = $row['post_tags'];
         $post_date = $row['post_date'];
         $post_views_count = $row['post_views_count'];
@@ -124,6 +124,10 @@ if (isset($_POST['checkBoxArray'])) {
 
         if (empty($post_tags)) {
           $post_tags = "No tags";
+        }
+
+        if (empty($post_image)) {
+          $post_image = "img_placeholder.jpg";
         }
 
         echo "<tr>";

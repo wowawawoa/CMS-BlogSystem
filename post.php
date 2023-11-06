@@ -4,9 +4,54 @@
 <!-- Navigation -->
 <?php include "includes/navigation.php"; ?>
 
+<?php
+
+if (isset($_POST['liked'])) {
+    $post_id = escape($_POST['post_id']);
+    $user_id = escape($_POST['user_id']);
+
+    // fetch post
+    $post_query = "SELECT * FROM posts WHERE post_id = $post_id";
+    $post_result = mysqli_query($connection, $post_query);
+    $post = mysqli_fetch_array($post_result);
+    $likes = $post['likes'];
+
+    // update post likes
+    $update_likes_query = "UPDATE posts SET likes = $likes + 1 WHERE post_id = $post_id";
+    mysqli_query($connection, $update_likes_query);
+
+    // create likes
+    $create_likes_query = "INSERT INTO likes(user_id, post_id) VALUES($user_id, $post_id)";
+    mysqli_query($connection, $create_likes_query);
+
+    exit();
+}
+
+if (isset($_POST['unliked'])) {
+    $post_id = escape($_POST['post_id']);
+    $user_id = escape($_POST['user_id']);
+
+    // fetch post
+    $post_query = "SELECT * FROM posts WHERE post_id = $post_id";
+    $post_result = mysqli_query($connection, $post_query);
+    $post = mysqli_fetch_array($post_result);
+    $likes = $post['likes'];
+
+    // update post unlikes
+    $delete_likes_query = "DELETE FROM likes WHERE post_id = $post_id AND user_id = $user_id";
+    mysqli_query($connection, $delete_likes_query);
+
+    // update post likes
+    $update_likes_query = "UPDATE posts SET likes = $likes - 1 WHERE post_id = $post_id";
+    mysqli_query($connection, $update_likes_query);
+
+    exit();
+}
+
+?>
+
 <!-- Page Content -->
 <div class="container">
-
     <div class="row">
 
         <!-- Blog Entries Column -->
@@ -70,6 +115,31 @@
                     <p><?php echo $post_content; ?></p>
 
                     <hr>
+
+                    <!-- Post Like -->
+                    <div class="row">
+                        <p class="pull-right">
+                            <a href="#" class="like">
+                                <span class="glyphicon glyphicon-thumbs-up"> Like</span>
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- Post Unlike -->
+                    <div class="row">
+                        <p class="pull-right">
+                            <a href="#" class="unlike">
+                                <span class="glyphicon glyphicon-thumbs-down"> Unlike</span>
+                            </a>
+                        </p>
+                    </div>
+
+                    <div class="row">
+                        <p class="pull-right">
+                            Like: 10
+                        </p>
+                    </div>
+                    <div class="clearfix"></div>
 
                 <?php
                 }
@@ -183,3 +253,36 @@
 
     <!-- Footer -->
     <?php include "includes/footer.php"; ?>
+
+    <script>
+        $(document).ready(function() {
+            var post_id = <?php echo $the_post_id; ?>;
+            var user_id = 20;
+
+            $('.like').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "post.php?p_id=<?php echo $the_post_id; ?>",
+                    type: 'post',
+                    data: {
+                        'liked': 1,
+                        'post_id': post_id,
+                        'user_id': user_id
+                    },
+                });
+            });
+
+            $('.unlike').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "post.php?p_id=<?php echo $the_post_id; ?>",
+                    type: 'post',
+                    data: {
+                        'unliked': 1,
+                        'post_id': post_id,
+                        'user_id': user_id
+                    },
+                });
+            });
+        })
+    </script>
