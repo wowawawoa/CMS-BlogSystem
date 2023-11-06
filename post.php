@@ -67,9 +67,7 @@ if (isset($_POST['unliked'])) {
                 $view_query .= "WHERE post_id = $the_post_id ";
                 $update_post_views_count = mysqli_query($connection, $view_query);
 
-                if (!$update_post_views_count) {
-                    die('QUERY FAILED' . mysqli_error($connection));
-                }
+                confirmQuery($update_post_views_count);
 
                 if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
                     $query = "SELECT * FROM posts WHERE post_id = $the_post_id";
@@ -79,9 +77,7 @@ if (isset($_POST['unliked'])) {
 
                 $select_all_posts_query = mysqli_query($connection, $query);
 
-                if (!$select_all_posts_query) {
-                    die('QUERY FAILED' . mysqli_error($connection));
-                }
+                confirmQuery($select_all_posts_query);
 
                 if (mysqli_num_rows($select_all_posts_query) === 0) {
                     redirect("index.php");
@@ -116,27 +112,35 @@ if (isset($_POST['unliked'])) {
 
                     <hr>
 
-                    <!-- Post Like -->
-                    <div class="row">
-                        <p class="pull-right">
-                            <a href="#" class="like">
-                                <span class="glyphicon glyphicon-thumbs-up"> Like</span>
-                            </a>
-                        </p>
-                    </div>
+                    <!-- Post Like and Unlike -->
+                    <?php
 
-                    <!-- Post Unlike -->
-                    <div class="row">
-                        <p class="pull-right">
-                            <a href="#" class="unlike">
-                                <span class="glyphicon glyphicon-thumbs-down"> Unlike</span>
-                            </a>
-                        </p>
-                    </div>
+                    if (isLoggedIn()) { ?>
+                        <div class="row">
+                            <p class="pull-right h4">
+                                <a href="" class="<?php echo userLikedThisPost($the_post_id) ? 'unlike' : 'like'; ?>">
+                                    <span class="<?php echo userLikedThisPost($the_post_id) ? 'glyphicon glyphicon-thumbs-down' : 'glyphicon glyphicon-thumbs-up'; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo userLikedThisPost($the_post_id) ? 'I liked this before' : 'want to like it?' ?>">
+                                        <?php echo userLikedThisPost($the_post_id) ? 'Unlike' : 'Like'; ?>
+                                    </span>
+                                </a>
+                            </p>
+                        </div>
+
+                    <?php } else { ?>
+
+                        <div class="row">
+                            <p class="pull-right h4">
+                                You need to <a href="/cms_blog/login.php">Login</a> to like
+                            </p>
+                        </div>
+
+                    <?php }
+
+                    ?>
 
                     <div class="row">
-                        <p class="pull-right">
-                            Like: 10
+                        <p class="pull-right" id="likesCount">
+                            Like: <?php echo getPostLikes($the_post_id); ?>
                         </p>
                     </div>
                     <div class="clearfix"></div>
@@ -162,9 +166,7 @@ if (isset($_POST['unliked'])) {
                         $query .= "VALUES ($the_post_id, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved', now()) ";
                         $create_comment_query = mysqli_query($connection, $query);
 
-                        if (!$create_comment_query) {
-                            die('QUERY FAILED' . mysqli_error($connection));
-                        }
+                        confirmQuery($create_comment_query);
 
                         redirect("post.php?p_id=$the_post_id");
                     } else {
@@ -211,9 +213,7 @@ if (isset($_POST['unliked'])) {
                 $query .= "ORDER BY comment_id DESC ";
                 $select_comment_query = mysqli_query($connection, $query);
 
-                if (!$select_comment_query) {
-                    die('QUERY FAILED' . mysqli_error($connection));
-                }
+                confirmQuery($select_comment_query);
 
                 while ($row = mysqli_fetch_array($select_comment_query)) {
                     $comment_date = $row['comment_date'];
@@ -256,11 +256,11 @@ if (isset($_POST['unliked'])) {
 
     <script>
         $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
             var post_id = <?php echo $the_post_id; ?>;
-            var user_id = 20;
+            var user_id = <?php echo loggedInUserId(); ?>
 
             $('.like').click(function(e) {
-                e.preventDefault();
                 $.ajax({
                     url: "post.php?p_id=<?php echo $the_post_id; ?>",
                     type: 'post',
@@ -273,7 +273,6 @@ if (isset($_POST['unliked'])) {
             });
 
             $('.unlike').click(function(e) {
-                e.preventDefault();
                 $.ajax({
                     url: "post.php?p_id=<?php echo $the_post_id; ?>",
                     type: 'post',

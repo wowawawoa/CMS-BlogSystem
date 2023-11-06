@@ -13,7 +13,14 @@ while ($row = mysqli_fetch_assoc($select_posts_by_id)) {
   $post_title = $row['post_title'];
   $post_category_id = $row['post_category_id'];
   $post_status = $row['post_status'];
+
   $post_image = $row['post_image'];
+  if(empty($post_image)) {
+    $post_image = 'img_placeholder.jpg';
+  } else {
+    $post_image = $row['post_image'];
+  }
+
   $post_tags = $row['post_tags'];
   $post_date = $row['post_date'];
   $post_content = $row['post_content'];
@@ -144,7 +151,6 @@ if (isset($_POST['update_post'])) {
   </div>
 
   <div class="form-group">
-    <!-- <img width="100" src="../images/<?php echo $post_image; ?>" alt="post image"> -->
     <img width="100" id="edit_post_image" src="../images/<?php echo $post_image; ?>" alt="post image">
     <input type="file" name="image" onchange="editPostImage(this);">
   </div>
