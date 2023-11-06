@@ -19,9 +19,7 @@
                 $query = "SELECT * FROM posts WHERE post_tags LIKE '%$search%'";
                 $search_query = mysqli_query($connection, $query);
 
-                if (!$search_query) {
-                    die("QUERY FAILED" . mysqli_error($connection));
-                }
+                confirmQuery($search_query);
 
                 $count = mysqli_num_rows($search_query);
 

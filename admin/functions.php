@@ -1,5 +1,14 @@
 <?php
 
+function imagePlaceholder($image = '')
+{
+  if (!$image) {
+    return 'img_placeholder.jpg';
+  } else {
+    return $image;
+  }
+}
+
 function confirmQuery($result)
 {
   global $connection;

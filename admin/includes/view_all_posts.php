@@ -51,9 +51,7 @@ if (isset($_POST['checkBoxArray'])) {
 
         $copy_query = mysqli_query($connection, $query);
 
-        if (!$copy_query) {
-          die("QUERY FAILED" . mysqli_error($connection));
-        }
+        confirmQuery($copy_query);
 
         break;
 
@@ -103,6 +101,9 @@ if (isset($_POST['checkBoxArray'])) {
     <tbody>
 
       <?php
+
+      // $current_user = $_SESSION['username'];
+
       // Joining tables
       $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id ORDER BY posts.post_id DESC";
       $select_posts = mysqli_query($connection, $query);

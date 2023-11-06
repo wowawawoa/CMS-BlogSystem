@@ -80,7 +80,7 @@
                 </p>
                 <hr>
                 <a href="post.php?p_id=<?php echo $post_id; ?>">
-                    <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="post image">
+                    <img class="img-responsive" src="images/<?php echo imagePlaceholder($post_image); ?>" alt="post image">
                 </a>
                 <hr>
                 <p><?php echo $post_content; ?></p>

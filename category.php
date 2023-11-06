@@ -30,9 +30,7 @@
             $count = mysqli_num_rows($find_category_posts);
             $count = ceil($count / $per_page);
 
-            if (!$find_category_posts) {
-                die('QUERY FAILED' . mysqli_error($connection));
-            }
+            confirmQuery($find_category_posts);
 
             if ($count === 0 || $count === null) {
                 echo "<h1 class='text-center'>No posts available</h1>";
