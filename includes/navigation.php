@@ -54,19 +54,21 @@
             <a href='admin'>Admin</a>
           </li>
 
+          <li>
+            <a href='includes/logout.php'>Logout</a>
+          </li>
+
         <?php else : ?>
 
           <li class="<?php echo $login_class; ?>">
             <a href='login.php'>Login</a>
           </li>
 
+          <li class="<?php echo $registration_class; ?>">
+            <a href='registration.php'>Registration</a>
+          </li>
+
         <?php endif; ?>
-
-
-
-        <li class="<?php echo $registration_class; ?>">
-          <a href='registration.php'>Registration</a>
-        </li>
 
         <li class="<?php echo $contact_class; ?>">
           <a href='contact.php'>Contact</a>

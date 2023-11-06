@@ -19,3 +19,6 @@ define("DB_PORT", 3307);
 // }
 
 $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+
+$query = "SET NAMES utf8";
+mysqli_query($connection, $query);

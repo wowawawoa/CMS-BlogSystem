@@ -36,7 +36,7 @@ if (ifItIsMethod('post')) {
                   <div class="form-group">
                     <div class="input-group">
                       <span class="input-group-addon"><i class="glyphicon glyphicon-user color-blue"></i></span>
-                      <input name="username" type="text" class="form-control" placeholder="Enter Username">
+                      <input name="username" type="text" class="form-control" placeholder="Enter Username" autocomplete="on">
                     </div>
                   </div>
 
@@ -49,6 +49,10 @@ if (ifItIsMethod('post')) {
 
                   <div class="form-group">
                     <input name="login" class="btn btn-lg btn-primary btn-block" value="Login" type="submit">
+                  </div>
+
+                  <div class="form-group text-right">
+                    <a href="forgot_password.php?forgot=<?php echo uniqid(true) ?>">Forgot Password</a>
                   </div>
 
                 </form>
