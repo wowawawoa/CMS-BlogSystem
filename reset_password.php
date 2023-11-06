@@ -7,9 +7,6 @@ if (!isset($_GET['email']) && !isset($_GET['token'])) {
   redirect('index.php');
 }
 
-// $token = '1d1d714de9b9273e881c7d89f07249bd7bd5c77f06d0863724ebb147e38c08f3e6a0c8b9c02ddd6d413ec63172762aae1c55';
-// $email = 'test1@test.com';
-
 if ($stmt = mysqli_prepare($connection, 'SELECT username, user_email, token FROM users WHERE token= ? ')) {
   mysqli_stmt_bind_param($stmt, 's', $_GET['token']);
   mysqli_stmt_execute($stmt);
@@ -17,9 +14,9 @@ if ($stmt = mysqli_prepare($connection, 'SELECT username, user_email, token FROM
   mysqli_stmt_fetch($stmt);
   mysqli_stmt_close($stmt);
 
-  // if ($_GET['token'] !== $token || $_GET['email'] !== $user_email) {
-  //   redirect('index.php');
-  // }
+  if ($_GET['token'] !== $token || $_GET['email'] !== $user_email) {
+    redirect('index.php');
+  }
 
   if (isset($_POST['password']) && isset($_POST['confirmPassword'])) {
     if ($_POST['password'] === $_POST['confirmPassword']) {
