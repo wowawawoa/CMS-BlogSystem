@@ -11,6 +11,9 @@
 
         <!-- Blog Entries Column -->
         <div class="col-md-8">
+            <h1 class="page-header">
+                CMS Blogs
+            </h1>
 
             <?php
 
@@ -58,22 +61,17 @@
                 $post_author = $row['post_user'];
                 $post_date = $row['post_date'];
                 $post_image = $row['post_image'];
-                $post_content = substr($row['post_content'], 0, 150);
+                $post_content = substr(strip_tags($row['post_content']), 0, 500);
                 $post_status = $row['post_status'];
 
             ?>
 
-                <h1 class="page-header">
-                    Page Heading
-                    <small>Secondary Text</small>
-                </h1>
-
-                <!-- First Blog Post -->
+                <!-- Blog Post -->
                 <h2>
                     <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
                 </h2>
                 <p class="lead">
-                    by <a href="author_posts.php?author=<?php echo $post_author; ?>&p_id=<?php echo $post_id; ?>"><?php echo $post_author; ?></a>
+                    by <a href="author_posts.php?author=<?php echo $post_author; ?>&page=1"><?php echo $post_author; ?></a>
                 </p>
                 <p>
                     <span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?>
@@ -83,7 +81,7 @@
                     <img class="img-responsive" src="images/<?php echo imagePlaceholder($post_image); ?>" alt="post image">
                 </a>
                 <hr>
-                <p><?php echo $post_content; ?></p>
+                <p><?php echo $post_content; ?>...</p>
                 <a class="btn btn-primary" href="post.php?p_id=<?php echo $post_id; ?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
                 <hr>
@@ -107,6 +105,7 @@
 
     <hr>
 
+    <!-- Pagination -->
     <ul class="pager">
 
         <?php
