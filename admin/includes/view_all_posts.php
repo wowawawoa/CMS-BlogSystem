@@ -92,17 +92,40 @@ if (isset($_POST['checkBoxArray'])) {
 
       <?php
 
+      $per_page = 10;
+
       // Joining tables
       if (is_admin()) {
-        $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id ORDER BY posts.post_id DESC";
-        $select_posts = mysqli_query($connection, $query);
+        $select_posts_query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id ORDER BY posts.post_id DESC";
+        $select_posts = mysqli_query($connection, $select_posts_query);
       } else {
-        $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id WHERE posts.post_user = '" . get_user_name() . "'" . " ORDER BY posts.post_id DESC";
-        // posts.post_user= '" . get_user_name() . "'"
-        $select_posts = mysqli_query($connection, $query);
+        $select_posts_query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id WHERE posts.post_user = '" . get_user_name() . "'" . " ORDER BY posts.post_id DESC";
+        $select_posts = mysqli_query($connection, $select_posts_query);
       }
 
-      while ($row = mysqli_fetch_assoc($select_posts)) {
+      $count = mysqli_num_rows($select_posts);
+      $total_page_count = ceil($count / $per_page);
+
+      if (isset($_GET['page'])) {
+        $page = intval(escape($_GET['page']));
+        if ($page > $total_page_count || $page < 1) {
+          redirect("posts.php?page=1");
+        }
+      } else {
+        $page = 1;
+      }
+
+      // post starting id on page
+      if ($page === "" || $page === 1) {
+        $page_1 = 0;
+      } else {
+        $page_1 = ($page * $per_page) - $per_page;
+      }
+
+      $limit_select_posts_query = $select_posts_query . " LIMIT $page_1, $per_page";
+      $limit_select_posts = mysqli_query($connection, $limit_select_posts_query);
+
+      while ($row = mysqli_fetch_assoc($limit_select_posts)) {
         $post_id = $row['post_id'];
         $post_author = $row['post_author'];
         $post_user = $row['post_user'];
@@ -179,6 +202,25 @@ if (isset($_POST['checkBoxArray'])) {
     </tbody>
   </table>
 </form>
+
+<hr>
+
+<!-- Pagination -->
+<ul class="pager">
+
+  <?php
+
+  for ($i = 1; $i <= $total_page_count; $i++) {
+    if ($i === $page) {
+      echo "<li><a class='active_link' href='posts.php?page={$i}'>{$i}</a></li>";
+    } else {
+      echo "<li><a href='posts.php?page={$i}'>{$i}</a></li>";
+    }
+  }
+
+  ?>
+
+</ul>
 
 <?php
 
