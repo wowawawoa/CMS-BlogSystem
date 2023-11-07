@@ -2,6 +2,10 @@
 
 <?php
 
+if (is_admin()) {
+    redirect("dashboard.php");
+}
+
 $post_count = count_records(get_all_user_posts());
 $comment_count = count_records(get_all_posts_user_comments());
 $category_count = count_records(get_all_user_categories());

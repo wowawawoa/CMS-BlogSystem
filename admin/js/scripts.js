@@ -10,7 +10,19 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  $("#selectAllBoxes").click(function (event) {
+  $("#selectAllPosts").click(function (event) {
+    if (this.checked) {
+      $(".checkBoxes").each(function () {
+        this.checked = true;
+      });
+    } else {
+      $(".checkBoxes").each(function () {
+        this.checked = false;
+      });
+    }
+  });
+
+  $("#selectAllComments").click(function (event) {
     if (this.checked) {
       $(".checkBoxes").each(function () {
         this.checked = true;

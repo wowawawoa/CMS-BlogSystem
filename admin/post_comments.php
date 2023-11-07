@@ -27,9 +27,13 @@
                 <th>Status</th>
                 <th>In Response to</th>
                 <th>Date</th>
-                <th>Approve</th>
-                <th>Unapprove</th>
-                <th>Delete</th>
+
+                <?php if (is_admin()) : ?>
+                  <th>Approve</th>
+                  <th>Unapprove</th>
+                  <th>Delete</th>
+                <?php endif; ?>
+
               </tr>
             </thead>
             <tbody>
@@ -65,9 +69,13 @@
                 }
 
                 echo "<td>{$comment_date}</td>";
-                echo "<td><a href='post_comments.php?approve={$comment_id}&id=" . $_GET['id'] . "'>Approve</a></td>";
-                echo "<td><a href='post_comments.php?unapprove={$comment_id}&id=" . $_GET['id'] . "'>Unapprove</a></td>";
-                echo "<td><a href='post_comments.php?delete={$comment_id}&id=" . $_GET['id'] . "'>Delete</a></td>";
+
+                if (is_admin()) {
+                  echo "<td><a href='comments.php?approve={$comment_id}'>Approve</a></td>";
+                  echo "<td><a href='comments.php?unapprove={$comment_id}'>Unapprove</a></td>";
+                  echo "<td><a href='comments.php?delete={$comment_id}'>Delete</a></td>";
+                }
+
                 echo "</tr>";
               }
 

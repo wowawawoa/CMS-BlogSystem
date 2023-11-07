@@ -9,28 +9,21 @@ if (isset($_POST['checkBoxArray'])) {
 
     switch ($bulk_options) {
       case 'published':
-        $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId} ";
-        $update_to_published_status = mysqli_query($connection, $query);
-        confirmQuery($update_to_published_status);
+        $update_to_published_status = query("UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId} ");
         break;
 
       case 'draft':
-        $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId} ";
-        $update_to_draft_status = mysqli_query($connection, $query);
-        confirmQuery($update_to_draft_status);
+        $update_to_draft_status = query("UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId} ");
         break;
 
       case 'delete':
-        $query = "DELETE FROM posts WHERE post_id = {$postValueId} ";
-        $update_to_delete_status = mysqli_query($connection, $query);
-        confirmQuery($update_to_delete_status);
+        $update_to_delete_status = query("DELETE FROM posts WHERE post_id = {$postValueId} ");
         break;
 
       case 'clone':
-        $query = "SELECT * FROM posts WHERE post_id = '{$postValueId}' ";
-        $select_post_query = mysqli_query($connection, $query);
+        $clone_select_posts_query = query("SELECT * FROM posts WHERE post_id = '{$postValueId}' ");
 
-        while ($row = mysqli_fetch_array($select_post_query)) {
+        while ($row = mysqli_fetch_array($clone_select_posts_query)) {
           $post_title = $row['post_title'];
           $post_category_id = $row['post_category_id'];
           $post_date = $row['post_date'];
@@ -42,17 +35,14 @@ if (isset($_POST['checkBoxArray'])) {
           $post_content = $row['post_content'];
 
           if (empty($post_tags)) {
-            $post_tags = "No tags";
+            $post_tags = "";
           }
         }
 
-        $query = "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status, post_user) ";
-        $query .= "VALUES({$post_category_id}, '{$post_title}', '{$post_author}', now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}', '{$post_user}') ";
-
-        $copy_query = mysqli_query($connection, $query);
-
-        confirmQuery($copy_query);
-
+        $clone_query = query(
+          "INSERT INTO posts(post_category_id, post_title, post_author, post_date, post_image, post_content, post_tags, post_status, post_user) " .
+            "VALUES({$post_category_id}, '{$post_title}', '{$post_author}', now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}', '{$post_user}') "
+        );
         break;
 
       default:
@@ -82,7 +72,7 @@ if (isset($_POST['checkBoxArray'])) {
 
     <thead>
       <tr>
-        <th><input type="checkbox" id="selectAllBoxes"></th>
+        <th><input type="checkbox" id="selectAllPosts"></th>
         <th>Id</th>
         <th>User</th>
         <th>Title</th>
@@ -102,11 +92,15 @@ if (isset($_POST['checkBoxArray'])) {
 
       <?php
 
-      // $current_user = $_SESSION['username'];
-
       // Joining tables
-      $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id ORDER BY posts.post_id DESC";
-      $select_posts = mysqli_query($connection, $query);
+      if (is_admin()) {
+        $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id ORDER BY posts.post_id DESC";
+        $select_posts = mysqli_query($connection, $query);
+      } else {
+        $query = "SELECT posts.post_id, posts.post_author, posts.post_user, posts.post_title, posts.post_category_id, posts.post_status, posts.post_image, posts.post_tags, posts.post_date, posts.post_views_count, categories.cat_id, categories.cat_title FROM posts LEFT JOIN categories ON posts.post_category_id = categories.cat_id WHERE posts.post_user = '" . get_user_name() . "'" . " ORDER BY posts.post_id DESC";
+        // posts.post_user= '" . get_user_name() . "'"
+        $select_posts = mysqli_query($connection, $query);
+      }
 
       while ($row = mysqli_fetch_assoc($select_posts)) {
         $post_id = $row['post_id'];
@@ -115,7 +109,7 @@ if (isset($_POST['checkBoxArray'])) {
         $post_title = $row['post_title'];
         $post_category_id = $row['post_category_id'];
         $post_status = $row['post_status'];
-        $post_image = $row['post_image'];        
+        $post_image = $row['post_image'];
         $post_tags = $row['post_tags'];
         $post_date = $row['post_date'];
         $post_views_count = $row['post_views_count'];
@@ -123,7 +117,7 @@ if (isset($_POST['checkBoxArray'])) {
         $cat_id = $row['cat_id'];
 
         if (empty($post_tags)) {
-          $post_tags = "No tags";
+          $post_tags = "";
         }
 
         if (empty($post_image)) {
@@ -149,16 +143,6 @@ if (isset($_POST['checkBoxArray'])) {
         }
 
         echo "<td>{$post_title}</td>";
-
-        // $query = "SELECT * FROM categories WHERE cat_id = $post_category_id ";
-        // $select_categories_id = mysqli_query($connection, $query);
-
-        // while ($row = mysqli_fetch_assoc($select_categories_id)) {
-        //   $cat_id = $row['cat_id'];
-        //   $cat_title = $row['cat_title'];
-
-        //   echo "<td>{$cat_title}</td>";
-        // }
         echo "<td>{$cat_title}</td>";
         echo "<td>{$post_status}</td>";
         echo "<td><img width='100' src='../images/{$post_image}' alt='post image'></td>";
@@ -180,13 +164,13 @@ if (isset($_POST['checkBoxArray'])) {
           <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
 
           <?php
-          echo "<td><input rel='$post_id' class='btn btn-danger delete_link' type='submit' name='delete' value='Delete'></td>"
+          echo "<td><input rel='$post_id' id='post_delete_btn' class='btn btn-danger' type='submit' name='delete' value='Delete'></td>"
           ?>
 
         </form>
 
       <?php
-        echo "<td><a rel='$post_id' href='javascript:void(0)' class='reset_link'>{$post_views_count}</a></td>";
+        echo "<td><a rel='$post_id' id='post_view_reset_btn' href='javascript:void(0)'>{$post_views_count}</a></td>";
         echo "</tr>";
       }
 
@@ -225,7 +209,7 @@ if (isset($_GET['reset'])) {
 <!-- Bootstrap modal -->
 <script>
   $(document).ready(function() {
-    $(".delete_link").on('click', function(e) {
+    $("#post_delete_btn").on('click', function(e) {
       e.preventDefault();
       var id = $(this).attr("rel");
       $(".modal_delete_link").val(id);
@@ -233,7 +217,7 @@ if (isset($_GET['reset'])) {
       $("#deleteModal").modal('show');
     })
 
-    $(".reset_link").on('click', function() {
+    $("#post_view_reset_btn").on('click', function() {
       var id = $(this).attr("rel");
       var reset_url = "posts.php?reset=" + id + " ";
       $(".modal_reset_link").attr("href", reset_url);

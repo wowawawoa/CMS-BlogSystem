@@ -2,7 +2,7 @@
 
 <?php
 
-if (!is_admin($_SESSION['username'])) {
+if (!is_admin()) {
   redirect("index.php");
 }
 

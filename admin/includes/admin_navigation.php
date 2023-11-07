@@ -52,13 +52,14 @@
   <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav side-nav">
-      <li>
-        <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> My Data</a>
-      </li>
 
       <?php if (is_admin()) : ?>
         <li>
           <a href="dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+        </li>
+      <?php else : ?>
+        <li>
+          <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> My Data</a>
         </li>
       <?php endif; ?>
 
@@ -86,21 +87,23 @@
         <a href="./comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
       </li>
 
-      <li>
-        <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown">
-          <i class="fa fa-fw fa-arrows-v"></i>
-          Users
-          <i class="fa fa-fw fa-caret-down"></i>
-        </a>
-        <ul id="users_dropdown" class="collapse">
-          <li>
-            <a href="users.php">View All Users</a>
-          </li>
-          <li>
-            <a href="users.php?source=add_user">Add User</a>
-          </li>
-        </ul>
-      </li>
+      <?php if (is_admin()) : ?>
+        <li>
+          <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown">
+            <i class="fa fa-fw fa-arrows-v"></i>
+            Users
+            <i class="fa fa-fw fa-caret-down"></i>
+          </a>
+          <ul id="users_dropdown" class="collapse">
+            <li>
+              <a href="users.php">View All Users</a>
+            </li>
+            <li>
+              <a href="users.php?source=add_user">Add User</a>
+            </li>
+          </ul>
+        </li>
+      <?php endif; ?>
 
       <li>
         <a href="profile.php"><i class="fa fa-fw fa-wrench"></i> Profile</a>
