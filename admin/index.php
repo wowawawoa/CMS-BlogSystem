@@ -1,24 +1,34 @@
 <?php include "includes/admin_header.php"; ?>
 
+<?php
+
+$post_count = count_records(get_all_user_posts());
+$comment_count = count_records(get_all_posts_user_comments());
+$category_count = count_records(get_all_user_categories());
+$post_published_count = count_records(get_all_user_published_posts());
+$post_draft_count = count_records(get_all_user_draft_posts());
+$approved_comment_count = count_records(get_all_user_approved_posts_comments());
+$unapproved_comment_count = count_records(get_all_user_unapproved_posts_comments());
+
+?>
+
 <div id="wrapper">
 
     <!-- Navigation -->
     <?php include "includes/admin_navigation.php"; ?>
 
     <div id="page-wrapper">
-
         <div class="container-fluid">
 
             <!-- Page Heading -->
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-                        Welcome to Admin
-                        <small><?php echo $_SESSION['username']; ?></small>
+                        Welcome to Your Data
+                        <small><?php echo get_user_name(); ?></small>
                     </h1>
                 </div>
             </div>
-            <!-- /.row -->
 
             <div class="row">
                 <!-- Posts -->
@@ -31,7 +41,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class='huge'>
-                                        <?php echo $post_count = recordCount('posts'); ?>
+                                        <?php echo $post_count; ?>
                                     </div>
                                     <div>Posts</div>
                                 </div>
@@ -57,39 +67,13 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class='huge'>
-                                        <?php echo $comment_count = recordCount('comments'); ?>
+                                        <?php echo $comment_count; ?>
                                     </div>
                                     <div>Comments</div>
                                 </div>
                             </div>
                         </div>
                         <a href="comments.php">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Users -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-user fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class='huge'>
-                                        <?php echo $user_count = recordCount('users'); ?>
-                                    </div>
-                                    <div> Users</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="users.php">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -109,7 +93,7 @@
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <div class='huge'>
-                                        <?php echo $category_count = recordCount('categories'); ?>
+                                        <?php echo $category_count; ?>
                                     </div>
                                     <div>Categories</div>
                                 </div>
@@ -125,16 +109,6 @@
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-
-            <?php
-
-            $post_published_count = checkStatus('posts', 'post_status', 'published');
-            $post_draft_count = checkStatus('posts', 'post_status', 'draft');
-            $unapproved_comment_count = checkStatus('comments', 'comment_status', 'unapproved');
-            $subscriber_count = checkUserRole('users', 'user_role', 'subscriber');
-
-            ?>
 
             <div class="row">
                 <script type="text/javascript">
@@ -149,10 +123,10 @@
 
                             <?php
 
-                            $element_text = ['All Posts', 'Active Posts', 'Draft Posts', 'Comments', 'Pending Comments', 'Users', 'Subscribers', 'Categories'];
-                            $element_count = [$post_count, $post_published_count, $post_draft_count, $comment_count, $unapproved_comment_count, $user_count, $subscriber_count, $category_count];
+                            $element_text = ['All Posts', 'Active Posts', 'Draft Posts', 'Comments', 'Approved Comments', 'Pending Comments', 'Categories'];
+                            $element_count = [$post_count, $post_published_count, $post_draft_count, $comment_count, $approved_comment_count, $unapproved_comment_count, $category_count];
 
-                            for ($i = 0; $i < 8; $i++) {
+                            for ($i = 0; $i < count($element_text); $i++) {
                                 echo "['{$element_text[$i]}'" . "," . "{$element_count[$i]}],";
                             }
 

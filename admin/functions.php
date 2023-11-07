@@ -1,13 +1,6 @@
 <?php
 
-function imagePlaceholder($image = '')
-{
-  if (!$image) {
-    return 'img_placeholder.jpg';
-  } else {
-    return $image;
-  }
-}
+// Database Helper Functions
 
 function confirmQuery($result)
 {
@@ -27,8 +20,15 @@ function redirect($location)
 function query($query)
 {
   global $connection;
+  $result = mysqli_query($connection, $query);
+  confirmQuery($result);
 
-  return mysqli_query($connection, $query);
+  return $result;
+}
+
+function fetchRecords($result)
+{
+  return mysqli_fetch_array($result);
 }
 
 function ifItIsMethod($method = null)
@@ -39,6 +39,19 @@ function ifItIsMethod($method = null)
 
   return false;
 }
+
+// End Database Helper Functions
+
+// General Functions
+
+function get_user_name()
+{
+  return isset($_SESSION['username']) ? $_SESSION['username'] : null;
+}
+
+// End General Functions
+
+// User Helper Functions
 
 function isLoggedIn()
 {
@@ -189,6 +202,11 @@ function recordCount($table)
   return $result;
 }
 
+function count_records($result)
+{
+  return mysqli_num_rows($result);
+}
+
 function checkStatus($table, $column, $status)
 {
   global $connection;
@@ -211,30 +229,24 @@ function checkUserRole($table, $column, $role)
   return mysqli_num_rows($result);
 }
 
-function is_admin($username = '')
+function is_admin()
 {
-  global $connection;
+  if (isLoggedIn()) {
+    $result = query("SELECT user_role FROM users WHERE user_id = " . loggedInUserId() . "");
+    $row = fetchRecords($result);
 
-  $query = "SELECT user_role FROM users WHERE username = '$username'";
-  $result = mysqli_query($connection, $query);
-  confirmQuery($result);
-
-  $row = mysqli_fetch_array($result);
-
-  if ($row['user_role'] === 'admin') {
-    return true;
-  } else {
-    return false;
+    if ($row['user_role'] === 'admin') {
+      return true;
+    } else {
+      return false;
+    }
   }
+  return false;
 }
 
 function username_exists($username)
 {
-  global $connection;
-
-  $query = "SELECT username FROM users WHERE username = '$username'";
-  $result = mysqli_query($connection, $query);
-  confirmQuery($result);
+  $result = query("SELECT username FROM users WHERE username = '$username'");
 
   if (mysqli_num_rows($result) > 0) {
     return true;
@@ -245,11 +257,7 @@ function username_exists($username)
 
 function email_exists($email)
 {
-  global $connection;
-
-  $query = "SELECT user_email FROM users WHERE user_email = '$email'";
-  $result = mysqli_query($connection, $query);
-  confirmQuery($result);
+  $result = query("SELECT user_email FROM users WHERE user_email = '$email'");
 
   if (mysqli_num_rows($result) > 0) {
     return true;
@@ -300,4 +308,59 @@ function login_user($username, $password, $success_redirect_to, $fail_redirect_t
   } else {
     redirect($fail_redirect_to);
   }
+}
+
+function imagePlaceholder($image = '')
+{
+  if (!$image) {
+    return 'img_placeholder.jpg';
+  } else {
+    return $image;
+  }
+}
+
+function get_all_user_posts()
+{
+  return query("SELECT * FROM posts INNER JOIN users ON posts.post_user = users.username WHERE users.user_id=" . loggedInUserId() . "");
+}
+
+function get_all_posts_user_comments()
+{
+  return query("SELECT * FROM posts
+  INNER JOIN comments ON posts.post_id = comments.comment_post_id
+  WHERE post_user= '" . get_user_name() . "'");
+}
+
+function get_all_user_categories()
+{
+  return query("SELECT DISTINCT categories.cat_title
+  FROM posts
+  JOIN categories ON posts.post_category_id = categories.cat_id
+  WHERE posts.post_user= '" . get_user_name() . "'");
+}
+
+function get_all_user_published_posts()
+{
+  return query("SELECT * FROM posts WHERE post_user= '" . get_user_name() . "'" . " AND post_status='published'");
+}
+
+function get_all_user_draft_posts()
+{
+  return query("SELECT * FROM posts WHERE post_user= '" . get_user_name() . "'" . " AND post_status='draft'");
+}
+
+
+function get_all_user_approved_posts_comments()
+{
+  return query("SELECT * FROM posts
+  INNER JOIN comments ON posts.post_id = comments.comment_post_id
+  WHERE post_user= '" . get_user_name() . "'" . " AND comment_status='approved'");
+}
+
+
+function get_all_user_unapproved_posts_comments()
+{
+  return query("SELECT * FROM posts
+  INNER JOIN comments ON posts.post_id = comments.comment_post_id
+  WHERE post_user= '" . get_user_name() . "'" . " AND comment_status='unapproved'");
 }
