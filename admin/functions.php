@@ -20,6 +20,7 @@ function redirect($location)
 function query($query)
 {
   global $connection;
+
   $result = mysqli_query($connection, $query);
   confirmQuery($result);
 

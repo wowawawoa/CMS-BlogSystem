@@ -28,11 +28,11 @@
             $find_count = mysqli_query($connection, $post_query_count);
             $count = mysqli_num_rows($find_count);
 
-            $count = ceil($count / $per_page);
+            $total_page_count = ceil($count / $per_page);
 
             if (isset($_GET['page'])) {
                 $page = intval(escape($_GET['page']));
-                if ($page > $count || $page < 1) {
+                if ($page > $total_page_count || $page < 1) {
                     redirect("index.php?page=1");
                 }
             } else {
@@ -110,7 +110,7 @@
 
         <?php
 
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $total_page_count; $i++) {
             if ($i === $page) {
                 echo "<li><a class='active_link' href='index.php?page={$i}'>{$i}</a></li>";
             } else {

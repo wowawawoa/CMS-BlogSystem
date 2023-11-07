@@ -32,11 +32,11 @@
 
             $count = mysqli_num_rows($select_all_posts_query);
 
-            $count = ceil($count / $per_page);
+            $total_page_count = ceil($count / $per_page);
 
             if (isset($_GET['page'])) {
                 $page = intval(escape($_GET['page']));
-                if ($page > $count || $page < 1) {
+                if ($page > $total_page_count || $page < 1) {
                     redirect("index.php?page=1");
                 }
             } else {
@@ -64,12 +64,12 @@
                     $post_user = $row['post_user'];
                     $post_date = $row['post_date'];
                     $post_image = $row['post_image'];
-                    $post_content = $row['post_content'];
+                    $post_content = substr(strip_tags($row['post_content']), 0, 500);
                     $post_id = $row['post_id'];
 
             ?>
 
-                    <!-- First Blog Post -->
+                    <!-- Blog Post -->
                     <h2>
                         <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
                     </h2>
@@ -105,7 +105,7 @@
 
         <?php
 
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $total_page_count; $i++) {
             if ($i === $page) {
                 echo "<li><a class='active_link' href='author_posts.php?author={$post_user}&page={$i}'>{$i}</a></li>";
             } else {

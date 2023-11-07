@@ -4,6 +4,14 @@
 <!-- Navigation -->
 <?php include "includes/navigation.php"; ?>
 
+<?php
+
+if (!isset($_GET['category'])) {
+    redirect("index.php");
+}
+
+?>
+
 <!-- Page Content -->
 <div class="container">
 
@@ -11,6 +19,15 @@
 
         <!-- Blog Entries Column -->
         <div class="col-md-8">
+            <h1 class="page-header">
+                <?php
+                $post_category_id = escape($_GET['category']);
+                $category_query = query("SELECT cat_title FROM categories WHERE cat_id = $post_category_id");
+                $row = mysqli_fetch_assoc($category_query);
+                $category_title = $row['cat_title'];
+                ?>
+                All posts for <?php echo $category_title; ?>
+            </h1>
 
             <?php
 
@@ -21,23 +38,20 @@
             $per_page = 5;
 
             if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
-                $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id";
+                $find_category_posts = query("SELECT * FROM posts WHERE post_category_id = $post_category_id");
             } else {
-                $post_query_count = "SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published'";
+                $find_category_posts = query("SELECT * FROM posts WHERE post_category_id = $post_category_id AND post_status = 'published'");
             }
 
-            $find_category_posts = mysqli_query($connection, $post_query_count);
             $count = mysqli_num_rows($find_category_posts);
-            $count = ceil($count / $per_page);
-
-            confirmQuery($find_category_posts);
+            $total_page_count = ceil($count / $per_page);
 
             if ($count === 0 || $count === null) {
                 echo "<h1 class='text-center'>No posts available</h1>";
             } else {
                 if (isset($_GET['page'])) {
                     $page = intval(escape($_GET['page']));
-                    if ($page > $count || $page < 1) {
+                    if ($page > $total_page_count || $page < 1) {
                         redirect("index.php?page=1");
                     }
                 } else {
@@ -65,28 +79,27 @@
                     $post_author = $row['post_author'];
                     $post_date = $row['post_date'];
                     $post_image = $row['post_image'];
-                    $post_content = substr($row['post_content'], 0, 200);
+                    $post_content = substr(strip_tags($row['post_content']), 0, 500);
 
             ?>
 
-                    <h1 class="page-header">
-                        Page Heading
-                        <small>Secondary Text</small>
-                    </h1>
-
-                    <!-- First Blog Post -->
+                    <!-- Blog Post -->
                     <h2>
                         <a href="post.php?p_id=<?php echo $post_id; ?>"><?php echo $post_title; ?></a>
                     </h2>
                     <p class="lead">
-                        by <a href="index.php"><?php echo $post_author; ?></a>
+                        by <a href="author_posts.php?author=<?php echo $post_author; ?>&page=1"><?php echo $post_author; ?></a>
                     </p>
-                    <p><span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?></p>
+                    <p>
+                        <span class="glyphicon glyphicon-time"></span> <?php echo $post_date; ?>
+                    </p>
                     <hr>
-                    <img class="img-responsive" src="images/<?php echo $post_image; ?>" alt="post image">
+                    <a href="post.php?p_id=<?php echo $post_id; ?>">
+                        <img class="img-responsive" src="images/<?php echo imagePlaceholder($post_image); ?>" alt="post image">
+                    </a>
                     <hr>
-                    <p><?php echo $post_content; ?></p>
-                    <a class="btn btn-primary" href="#">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <p><?php echo $post_content; ?>...</p>
+                    <a class="btn btn-primary" href="post.php?p_id=<?php echo $post_id; ?>">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
 
                     <hr>
 
@@ -106,11 +119,12 @@
 
     <hr>
 
+    <!-- Pagination -->
     <ul class="pager">
 
         <?php
 
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $total_page_count; $i++) {
             if ($i === $page) {
                 echo "<li><a class='active_link' href='category.php?category={$post_category_id}&page={$i}'>{$i}</a></li>";
             } else {
