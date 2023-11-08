@@ -29,7 +29,7 @@ if (!isset($_GET['search'])) {
 
                 $per_page = 5;
 
-                if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                if (is_admin()) {
                     $stmt = mysqli_prepare($connection, "SELECT * FROM posts WHERE post_tags LIKE ?");
                 } else {
                     $stmt = mysqli_prepare($connection, "SELECT * FROM posts WHERE post_status = 'published' AND post_tags LIKE ?");
@@ -67,7 +67,7 @@ if (!isset($_GET['search'])) {
                         $page_1 = ($page * $per_page) - $per_page;
                     }
 
-                    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                    if (is_admin()) {
                         $limited_stmt = mysqli_prepare($connection, "SELECT * FROM posts WHERE post_tags LIKE ? LIMIT $page_1, $per_page");
                     } else {
                         $limited_stmt = mysqli_prepare($connection, "SELECT * FROM posts WHERE post_status = 'published' AND post_tags LIKE ? LIMIT $page_1, $per_page");

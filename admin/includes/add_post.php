@@ -6,14 +6,14 @@ if (isset($_POST['create_post'])) {
   $post_category_id = escape($_POST['post_category']);
   $post_status = escape($_POST['status']);
 
-  $post_image = $_FILES['image']['name'];
-  $post_image_temp = $_FILES['image']['tmp_name'];
+  $post_image = $_FILES['post_image']['name'];
+  $post_image_temp = $_FILES['post_image']['tmp_name'];
+
+  move_uploaded_file($post_image_temp, "../images/$post_image");
 
   $post_tags = escape($_POST['tags']);
   $post_content = escape($_POST['content']);
   $post_date = escape(date('d-m-y'));
-
-  move_uploaded_file($post_image_temp, "../images/$post_image");
 
   $query = "INSERT INTO posts(post_category_id, post_title, post_user, post_date, post_image, post_content, post_tags, post_status) ";
   $query .= "VALUES({$post_category_id}, '{$post_title}', '{$post_user}', now(), '{$post_image}', '{$post_content}', '{$post_tags}', '{$post_status}') ";
@@ -63,16 +63,17 @@ if (isset($_POST['create_post'])) {
 
       <?php
 
-      $users_query = "SELECT * FROM users";
-      $select_users = mysqli_query($connection, $users_query);
+      if (is_admin()) {
+        $select_users = query("SELECT * FROM users");
 
-      confirmQuery($select_users);
+        while ($row = mysqli_fetch_assoc($select_users)) {
+          $user_id = $row['user_id'];
+          $username = $row['username'];
 
-      while ($row = mysqli_fetch_assoc($select_users)) {
-        $user_id = $row['user_id'];
-        $username = $row['username'];
-
-        echo "<option value='{$username}'>{$username}</option>";
+          echo "<option value='{$username}'>{$username}</option>";
+        }
+      } else {
+        echo "<option value='{$_SESSION['username']}'>{$_SESSION['username']}</option>";
       }
 
       ?>
@@ -90,8 +91,8 @@ if (isset($_POST['create_post'])) {
 
   <div class="form-group">
     <label for="image" style="display: block;">Post Image</label>
-    <img width="100" id="add_post_image" src="" alt="post image" style="display: none;" >
-    <input type="file" name="image" onchange="addPostImage(this);">
+    <img width="100" id="add_post_image" src="" alt="post image" style="display: none;">
+    <input type="file" name="post_image" onchange="addPostImage(this);">
   </div>
 
   <div class="form-group">

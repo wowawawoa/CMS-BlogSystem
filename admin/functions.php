@@ -193,14 +193,10 @@ function escape($string)
 
 function recordCount($table)
 {
-  global $connection;
+  $select_all_posts = query("SELECT * FROM " . $table);
+  $count_result = mysqli_num_rows($select_all_posts);
 
-  $query = "SELECT * FROM " . $table;
-  $select_all_posts = mysqli_query($connection, $query);
-  $result = mysqli_num_rows($select_all_posts);
-  confirmQuery($result);
-
-  return $result;
+  return $count_result;
 }
 
 function count_records($result)
@@ -210,24 +206,16 @@ function count_records($result)
 
 function checkStatus($table, $column, $status)
 {
-  global $connection;
+  $check_status = query("SELECT * FROM $table WHERE $column = '$status'");
 
-  $query = "SELECT * FROM $table WHERE $column = '$status'";
-  $result = mysqli_query($connection, $query);
-  confirmQuery($result);
-
-  return mysqli_num_rows($result);
+  return mysqli_num_rows($check_status);
 }
 
 function checkUserRole($table, $column, $role)
 {
-  global $connection;
+  $check_user_role = query("SELECT * FROM $table WHERE $column = '$role'");
 
-  $query = "SELECT * FROM $table WHERE $column = '$role'";
-  $result = mysqli_query($connection, $query);
-  confirmQuery($result);
-
-  return mysqli_num_rows($result);
+  return mysqli_num_rows($check_user_role);
 }
 
 function is_admin()

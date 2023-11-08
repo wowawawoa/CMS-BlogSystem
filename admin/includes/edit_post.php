@@ -15,7 +15,7 @@ while ($row = mysqli_fetch_assoc($select_posts_by_id)) {
   $post_status = $row['post_status'];
 
   $post_image = $row['post_image'];
-  if(empty($post_image)) {
+  if (empty($post_image)) {
     $post_image = 'img_placeholder.jpg';
   } else {
     $post_image = $row['post_image'];
@@ -83,10 +83,7 @@ if (isset($_POST['update_post'])) {
         $the_post_id = escape($_GET['edit_post']);
       }
 
-      $query = "SELECT * FROM categories";
-      $select_categories = mysqli_query($connection, $query);
-
-      confirmQuery($select_categories);
+      $select_categories = query("SELECT * FROM categories");
 
       while ($row = mysqli_fetch_assoc($select_categories)) {
         $cat_id = $row['cat_id'];
@@ -108,23 +105,20 @@ if (isset($_POST['update_post'])) {
     <label for="users">Users</label>
     <select name="post_user" id="">
 
-      <?php echo "<option value='{$post_user}'>{$post_user}</option>"; ?>
-
       <?php
 
-      $users_query = "SELECT * FROM users";
-      $select_users = mysqli_query($connection, $users_query);
+      if (is_admin()) {
+        $select_users = query("SELECT * FROM users");
 
-      confirmQuery($select_users);
+        while ($row = mysqli_fetch_assoc($select_users)) {
+          $user_id = $row['user_id'];
+          $username = $row['username'];
 
-      while ($row = mysqli_fetch_assoc($select_users)) {
-        $user_id = $row['user_id'];
-        $username = $row['username'];
-
-        if ($post_user === $username) {
-          echo "<option selected value='{$username}'>{$username}</option>";
-        } else {
-          echo "<option value='{$username}'>{$username}</option>";
+          if ($post_user === $username) {
+            echo "<option selected value='{$username}'>{$username}</option>";
+          } else {
+            echo "<option value='{$username}'>{$username}</option>";
+          }
         }
       }
 

@@ -6,6 +6,15 @@ if (window.history.replaceState) {
 $(document).ready(function () {
   $("#summernote").summernote({
     height: 200,
+    toolbar: [
+      ["style", ["style"]],
+      ["font", ["bold", "underline", "clear"]],
+      ["fontname", ["fontname"]],
+      ["color", ["color"]],
+      ["para", ["ul", "ol", "paragraph"]],
+      ["table", ["table"]],
+      ["view", ["fullscreen", "codeview", "help"]],
+    ],
   });
 });
 

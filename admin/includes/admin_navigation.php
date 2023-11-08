@@ -54,16 +54,16 @@
     <ul class="nav navbar-nav side-nav">
 
       <?php if (is_admin()) : ?>
-        <li>
+        <li class="<?php echo basename($_SERVER['PHP_SELF']) === "dashboard.php" ? "active" : "" ?>">
           <a href="dashboard.php"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
         </li>
       <?php else : ?>
-        <li>
+        <li class="<?php echo basename($_SERVER['PHP_SELF']) === "index.php" ? "active" : "" ?>">
           <a href="index.php"><i class="fa fa-fw fa-dashboard"></i> My Data</a>
         </li>
       <?php endif; ?>
 
-      <li>
+      <li class="<?php echo basename($_SERVER['PHP_SELF']) === "posts.php" ? "active" : "" ?>">
         <a href="javascript:;" data-toggle="collapse" data-target="#posts_dropdown">
           <i class="fa fa-fw fa-arrows-v"></i>
           Posts
@@ -79,16 +79,12 @@
         </ul>
       </li>
 
-      <li>
-        <a href="./categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
-      </li>
-
-      <li>
+      <li class="<?php echo basename($_SERVER['PHP_SELF']) === "comments.php" ? "active" : "" ?>">
         <a href="./comments.php"><i class="fa fa-fw fa-file"></i> Comments</a>
       </li>
 
       <?php if (is_admin()) : ?>
-        <li>
+        <li class="<?php echo basename($_SERVER['PHP_SELF']) === "users.php" ? "active" : "" ?>">
           <a href="javascript:;" data-toggle="collapse" data-target="#users_dropdown">
             <i class="fa fa-fw fa-arrows-v"></i>
             Users
@@ -103,9 +99,13 @@
             </li>
           </ul>
         </li>
+
+        <li class="<?php echo basename($_SERVER['PHP_SELF']) === "categories.php" ? "active" : "" ?>">
+          <a href="./categories.php"><i class="fa fa-fw fa-wrench"></i> Categories</a>
+        </li>
       <?php endif; ?>
 
-      <li>
+      <li class="<?php echo basename($_SERVER['PHP_SELF']) === "profile.php" ? "active" : "" ?>">
         <a href="profile.php"><i class="fa fa-fw fa-wrench"></i> Profile</a>
       </li>
     </ul>

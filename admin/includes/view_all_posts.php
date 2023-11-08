@@ -181,20 +181,15 @@ if (isset($_POST['checkBoxArray'])) {
         echo "<td><a class='btn btn-primary' href='../post.php?p_id={$post_id}'>View Post</a></td>";
         echo "<td><a class='btn btn-info' href='posts.php?source=edit_post&p_id={$post_id}'>Edit</a></td>";
 
+        echo "<td><a rel='$post_id' href='javascript:void(0)' class='btn btn-danger post_delete_btn'>Delete</a></td>";
+        echo "<td><a rel='$post_id' href='javascript:void(0)' class='post_view_reset_btn'>{$post_views_count}</a></td>";
+
+        echo "</tr>";
+
         ?>
 
-        <form action="" method="POST">
-          <input type="hidden" name="post_id" value="<?php echo $post_id ?>">
-
-          <?php
-          echo "<td><input rel='$post_id' id='post_delete_btn' class='btn btn-danger' type='submit' name='delete' value='Delete'></td>"
-          ?>
-
-        </form>
-
       <?php
-        echo "<td><a rel='$post_id' id='post_view_reset_btn' href='javascript:void(0)'>{$post_views_count}</a></td>";
-        echo "</tr>";
+
       }
 
       ?>
@@ -224,12 +219,11 @@ if (isset($_POST['checkBoxArray'])) {
 
 <?php
 
-if (isset($_POST['delete'])) {
+if (isset($_GET['delete'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] === 'admin') {
-      $the_post_id = escape($_POST['post_id']);
-      $query = "DELETE FROM posts WHERE post_id = {$the_post_id} ";
-      $delete_query = mysqli_query($connection, $query);
+    if ($_SESSION['user_role'] == 'admin') {
+      $the_post_id = escape($_GET['delete']);
+      $delete_post = query("DELETE FROM posts WHERE post_id = {$the_post_id} ");
       redirect("posts.php");
     }
   }
@@ -239,8 +233,7 @@ if (isset($_GET['reset'])) {
   if (isset($_SESSION['user_role'])) {
     if ($_SESSION['user_role'] === 'admin') {
       $the_post_id = escape($_GET['reset']);
-      $query = "UPDATE posts SET post_views_count = 0 WHERE post_id =" . mysqli_real_escape_string($connection, $_GET['reset']);
-      $reset_query = mysqli_query($connection, $query);
+      $reset_view = query("UPDATE posts SET post_views_count = 0 WHERE post_id = {$the_post_id} ");
       redirect("posts.php");
     }
   }
@@ -251,17 +244,19 @@ if (isset($_GET['reset'])) {
 <!-- Bootstrap modal -->
 <script>
   $(document).ready(function() {
-    $("#post_delete_btn").on('click', function(e) {
-      e.preventDefault();
+    $(".post_delete_btn").on('click', function(e) {
       var id = $(this).attr("rel");
-      $(".modal_delete_link").val(id);
+      var delete_url = "posts.php?delete=" + id + " ";
+
+      $(".modal_delete_link").attr("href", delete_url);
       $(".modal-body").html("<h3>Are you sure you want to delete post " + id + "</h3>");
       $("#deleteModal").modal('show');
     })
 
-    $("#post_view_reset_btn").on('click', function() {
+    $(".post_view_reset_btn").on('click', function() {
       var id = $(this).attr("rel");
       var reset_url = "posts.php?reset=" + id + " ";
+
       $(".modal_reset_link").attr("href", reset_url);
       $("#resetModal").modal('show');
     })

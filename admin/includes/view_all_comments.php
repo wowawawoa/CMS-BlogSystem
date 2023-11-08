@@ -33,8 +33,10 @@ if (isset($_POST['checkBoxArray'])) {
     <div id="bulkOptionsContainer" class="col-xs-4">
       <select class="form-control" name="bulk_options" id="">
         <option value="">Select Options</option>
-        <option value="approved">Approve</option>
-        <option value="unapproved">Unapprove</option>
+        <?php if (is_admin()) : ?>
+          <option value='approved'>Approve</option>
+          <option value='unapproved'>Unapprove</option>
+        <?php endif; ?>
         <option value="delete">Delete</option>
       </select>
     </div>
@@ -59,8 +61,9 @@ if (isset($_POST['checkBoxArray'])) {
         <?php if (is_admin()) : ?>
           <th>Approve</th>
           <th>Unapprove</th>
-          <th>Delete</th>
         <?php endif; ?>
+
+        <th>Delete</th>
 
       </tr>
     </thead>
@@ -116,17 +119,8 @@ if (isset($_POST['checkBoxArray'])) {
         if (is_admin()) {
           echo "<td><a href='comments.php?approve={$comment_id}'>Approve</a></td>";
           echo "<td><a href='comments.php?unapprove={$comment_id}'>Unapprove</a></td>";
-
+          echo "<td><a rel='$comment_id' href='javascript:void(0)' class='btn btn-danger comment_delete_btn'>Delete</a></td>";
         ?>
-
-          <form action="" method="POST">
-            <input type="hidden" name="comment_id" value="<?php echo $comment_id ?>">
-
-            <?php
-            echo "<td><input rel='$comment_id' id='comment_delete_btn' class='btn btn-danger' type='submit' name='delete' value='Delete'></td>"
-            ?>
-
-          </form>
 
       <?php
 
@@ -165,12 +159,22 @@ if (isset($_GET['unapprove'])) {
   }
 }
 
-if (isset($_POST['delete'])) {
+// if (isset($_POST['delete'])) {
+//   if (isset($_SESSION['user_role'])) {
+//     if ($_SESSION['user_role'] === 'admin') {
+//       $the_comment_id = escape($_POST['comment_id']);
+//       $query = "DELETE FROM comments WHERE comment_id = {$the_comment_id} ";
+//       $delete_query = mysqli_query($connection, $query);
+//       redirect("comments.php");
+//     }
+//   }
+// }
+
+if (isset($_GET['delete'])) {
   if (isset($_SESSION['user_role'])) {
-    if ($_SESSION['user_role'] === 'admin') {
-      $the_comment_id = escape($_POST['comment_id']);
-      $query = "DELETE FROM comments WHERE comment_id = {$the_comment_id} ";
-      $delete_query = mysqli_query($connection, $query);
+    if ($_SESSION['user_role'] == 'admin') {
+      $the_comment_id = escape($_GET['delete']);
+      $delete_post = query("DELETE FROM comments WHERE comment_id = {$the_comment_id} ");
       redirect("comments.php");
     }
   }
@@ -181,10 +185,11 @@ if (isset($_POST['delete'])) {
 <!-- Bootstrap modal -->
 <script>
   $(document).ready(function() {
-    $("#comment_delete_btn").on('click', function(e) {
-      e.preventDefault();
+    $(".comment_delete_btn").on('click', function(e) {
       var id = $(this).attr("rel");
-      $(".modal_delete_link").val(id);
+      var delete_url = "comments.php?delete=" + id + " ";
+
+      $(".modal_delete_link").attr("href", delete_url);
       $(".modal-body").html("<h3>Are you sure you want to delete comment " + id + "</h3>");
       $("#deleteModal").modal('show');
     })
