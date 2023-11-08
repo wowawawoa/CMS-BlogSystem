@@ -184,28 +184,34 @@ if (isset($_POST['unliked'])) {
 
                 ?>
 
-                <div class="well">
-                    <h4>Leave a Comment:</h4>
-                    <p class="text-danger"><?php echo $message; ?></p>
-                    <form role="form" action="#" method="POST">
-                        <div class="form-group">
-                            <label for="Author">Author</label>
-                            <input type="text" required class="form-control" name="comment_author">
-                        </div>
+                <?php if (isLoggedIn()) : ?>
+                    <div class="well">
+                        <h4>Leave a Comment:</h4>
+                        <p class="text-danger"><?php echo $message; ?></p>
+                        <form role="form" action="#" method="POST">
+                            <div class="form-group">
+                                <label for="Author">Author</label>
+                                <input type="text" required class="form-control" name="comment_author">
+                            </div>
 
-                        <div class="form-group">
-                            <label for="Email">Email</label>
-                            <input type="email" required class="form-control" name="comment_email">
-                        </div>
+                            <div class="form-group">
+                                <label for="Email">Email</label>
+                                <input type="email" required class="form-control" name="comment_email">
+                            </div>
 
-                        <div class="form-group">
-                            <label for="comment">Your Comment</label>
-                            <textarea class="form-control" required name="comment_content" rows="3"></textarea>
-                        </div>
+                            <div class="form-group">
+                                <label for="comment">Your Comment</label>
+                                <textarea class="form-control" required name="comment_content" rows="3"></textarea>
+                            </div>
 
-                        <button type="submit" name="create_comment" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
+                            <button type="submit" name="create_comment" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+                <?php else : ?>
+                    <div class="well">
+                        <h4 class="text-center">You need to <a href="/cms_blog/login.php">Login</a> to comment.</h4>
+                    </div>
+                <?php endif; ?>
 
                 <hr>
 
