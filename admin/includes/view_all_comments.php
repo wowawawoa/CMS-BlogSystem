@@ -92,7 +92,7 @@ if (isset($_POST['checkBoxArray'])) {
 
         <td><input type='checkbox' class='checkBoxes' name='checkBoxArray[]' value='<?php echo $comment_id; ?>'></td>
 
-        <?php
+      <?php
 
         echo "<td>{$comment_id}</td>";
         echo "<td>{$comment_author}</td>";
@@ -119,13 +119,9 @@ if (isset($_POST['checkBoxArray'])) {
         if (is_admin()) {
           echo "<td><a href='comments.php?approve={$comment_id}'>Approve</a></td>";
           echo "<td><a href='comments.php?unapprove={$comment_id}'>Unapprove</a></td>";
-          echo "<td><a rel='$comment_id' href='javascript:void(0)' class='btn btn-danger comment_delete_btn'>Delete</a></td>";
-        ?>
-
-      <?php
-
         }
 
+        echo "<td><a rel='$comment_id' href='javascript:void(0)' class='btn btn-danger comment_delete_btn'>Delete</a></td>";
         echo "</tr>";
       }
 
@@ -159,22 +155,17 @@ if (isset($_GET['unapprove'])) {
   }
 }
 
-// if (isset($_POST['delete'])) {
-//   if (isset($_SESSION['user_role'])) {
-//     if ($_SESSION['user_role'] === 'admin') {
-//       $the_comment_id = escape($_POST['comment_id']);
-//       $query = "DELETE FROM comments WHERE comment_id = {$the_comment_id} ";
-//       $delete_query = mysqli_query($connection, $query);
-//       redirect("comments.php");
-//     }
-//   }
-// }
-
 if (isset($_GET['delete'])) {
   if (isset($_SESSION['user_role'])) {
     if ($_SESSION['user_role'] == 'admin') {
       $the_comment_id = escape($_GET['delete']);
       $delete_post = query("DELETE FROM comments WHERE comment_id = {$the_comment_id} ");
+      redirect("comments.php");
+    }
+
+    if ($_SESSION['user_role'] == 'subscriber') {
+      $the_comment_id = escape($_GET['delete']);
+      $delete_post = query("DELETE FROM comments WHERE comment_id = {$the_comment_id} AND comment_username = '" . get_user_name() . "' ");
       redirect("comments.php");
     }
   }
